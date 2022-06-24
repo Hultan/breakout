@@ -51,5 +51,5 @@ func (m *MainForm) OpenMainForm(app *gtk.Application) {
 	// Start BreakOut game
 	da := m.builder.GetObject("drawing_area").(*gtk.DrawingArea)
 	g := game.NewBreakOut(m.Window, da)
-	g.StartGame()
+	g.Start()
 }

@@ -12,9 +12,10 @@ type player struct {
 	size float64
 }
 
-func newPlayer(name string) *player {
+func newPlayer(name string, width, height float64) *player {
+	size := 100.0
 	return &player{name, entity{
-		position: position{100, 100},
+		position: position{(width - size) / 2, height - 50},
 		speed:    speed{},
 		color: color.RGBA{
 			R: 100,
@@ -22,7 +23,7 @@ func newPlayer(name string) *player {
 			B: 0,
 			A: 255,
 		},
-	}, 100}
+	}, size}
 }
 
 func (p *player) draw(ctx *cairo.Context) {

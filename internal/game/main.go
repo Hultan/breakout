@@ -4,7 +4,6 @@ import (
 	"image/color"
 	"time"
 
-	"github.com/gotk3/gotk3/cairo"
 	"github.com/gotk3/gotk3/gdk"
 	"github.com/gotk3/gotk3/gtk"
 )
@@ -16,36 +15,31 @@ var backgroundColor = color.RGBA{
 	A: 255,
 }
 
-var entities []drawable
-
 type BreakOut struct {
-	win      *gtk.ApplicationWindow
-	da       *gtk.DrawingArea
-	ticker   ticker
-	speed    time.Duration
-	breakout *breakout
+	win        *gtk.ApplicationWindow
+	tickerQuit chan struct{}
+	ticker     *time.Ticker
+	speed      time.Duration
+	game       *game
 }
 
 func NewBreakOut(win *gtk.ApplicationWindow, da *gtk.DrawingArea) *BreakOut {
 	b := &BreakOut{
 		win:   win,
-		da:    da,
 		speed: 20,
 	}
+
+	b.win.Connect("key-press-event", b.onKeyPress)
+	a := b.win.GetAllocation()
+	b.game = newGame(da, "per", float64(a.GetWidth()), float64(a.GetHeight()))
+
+	b.ticker = time.NewTicker(b.speed * time.Millisecond)
+	b.tickerQuit = make(chan struct{})
+
 	return b
 }
 
-func (b *BreakOut) StartGame() {
-	b.win.Connect("key-press-event", b.onKeyPress)
-	b.da.Connect("draw", b.onDraw)
-
-	b.ticker.ticker = time.NewTicker(b.speed * time.Millisecond)
-	b.ticker.tickerQuit = make(chan struct{})
-
-	a := b.win.GetAllocation()
-	b.breakout = newBreakout("per", float64(a.GetWidth()), float64(a.GetHeight()))
-
-	entities = append(entities, b.breakout.p)
+func (b *BreakOut) Start() {
 
 	go b.mainLoop()
 }
@@ -53,28 +47,14 @@ func (b *BreakOut) StartGame() {
 func (b *BreakOut) mainLoop() {
 	for {
 		select {
-		case <-b.ticker.ticker.C:
-			b.breakout.update()
-			b.da.QueueDraw()
-		case <-b.ticker.tickerQuit:
-			b.breakout.isActive = false
-			b.ticker.ticker.Stop()
+		case <-b.ticker.C:
+			b.game.update()
+			b.game.draw()
+		case <-b.tickerQuit:
+			b.ticker.Stop()
 			return
 		}
 	}
-}
-
-func (b *BreakOut) onDraw(_ *gtk.DrawingArea, ctx *cairo.Context) {
-	b.drawBackground(ctx, backgroundColor)
-	for i := range entities {
-		entities[i].draw(ctx)
-	}
-}
-
-func (b *BreakOut) drawBackground(ctx *cairo.Context, color color.Color) {
-	ctx.SetSourceRGBA(getColor(color))
-	ctx.Rectangle(0, 0, b.breakout.width, b.breakout.height)
-	ctx.Fill()
 }
 
 func (b *BreakOut) onKeyPress(_ *gtk.ApplicationWindow, e *gdk.Event) {
@@ -85,15 +65,12 @@ func (b *BreakOut) onKeyPress(_ *gtk.ApplicationWindow, e *gdk.Event) {
 		b.quit()
 		b.win.Close()
 	case gdk.KEY_Left:
-		b.breakout.p.position.x -= 10
+		b.game.play.position.x -= 10
 	case gdk.KEY_Right:
-		b.breakout.p.position.x += 10
+		b.game.play.position.x += 10
 	}
 }
 
 func (b *BreakOut) quit() {
-	if b.breakout.isActive {
-		b.breakout.isActive = false
-		close(b.ticker.tickerQuit) // Stop ticker
-	}
+	close(b.tickerQuit) // Stop ticker
 }

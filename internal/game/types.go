@@ -2,7 +2,6 @@ package game
 
 import (
 	"image/color"
-	"time"
 )
 
 type position struct {
@@ -25,9 +24,4 @@ type ball struct {
 
 type enemy struct {
 	entity
-}
-
-type ticker struct {
-	tickerQuit chan struct{}
-	ticker     *time.Ticker
 }
