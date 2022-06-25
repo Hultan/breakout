@@ -1,19 +1,11 @@
 package game
 
 import (
-	"image/color"
 	"time"
 
 	"github.com/gotk3/gotk3/gdk"
 	"github.com/gotk3/gotk3/gtk"
 )
-
-var backgroundColor = color.RGBA{
-	R: 128,
-	G: 128,
-	B: 128,
-	A: 255,
-}
 
 type BreakOut struct {
 	win        *gtk.ApplicationWindow

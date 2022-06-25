@@ -5,6 +5,6 @@ import (
 )
 
 type drawable interface {
-	draw(ctx *cairo.Context)
+	draw(*cairo.Context, *game)
 	update()
 }

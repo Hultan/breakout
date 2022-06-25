@@ -12,16 +12,18 @@ type speed struct {
 	dx, dy float64
 }
 
+type collisionType int
+
+const (
+	onCollisionNone collisionType = iota
+	onCollisionBounce
+	onCollisionExplode
+	onCollisionBallLost
+)
+
 type entity struct {
 	position
 	speed
+	collisionType
 	color color.Color
-}
-
-type ball struct {
-	entity
-}
-
-type enemy struct {
-	entity
 }
