@@ -15,7 +15,7 @@ type game struct {
 	width, height float64
 }
 
-var entities []drawable
+var entities []gameObject
 var theBall *ball
 
 func newGame(da *gtk.DrawingArea, name string, width, height float64) *game {
@@ -30,8 +30,10 @@ func newGame(da *gtk.DrawingArea, name string, width, height float64) *game {
 
 	// Entities
 	entities = append(entities, g.play)
-	entities = append(entities, newCage())
-	entities = append(entities, newCageBottom())
+	entities = append(entities, newCage(0, 0, 10, g.height))                      // left cage
+	entities = append(entities, newCage(0, 0, g.width, 10))                       // top cage
+	entities = append(entities, newCage(g.width-10, 0, g.width, g.height))        // right cage
+	entities = append(entities, newCageBottom(0, g.height-10, g.width, g.height)) // bottom cage
 	theBall = newBall(g)
 	entities = append(entities, theBall)
 
@@ -44,6 +46,16 @@ func (g *game) update() {
 	}
 }
 
+func (g *game) checkCollision() {
+	for i := range entities {
+		e := entities[i]
+		if theBall.collidesWith(e) {
+			theBall.collide(e)
+			e.collide(theBall)
+		}
+	}
+}
+
 func (g *game) draw() {
 	// Triggers onDraw function
 	g.da.QueueDraw()
@@ -52,7 +64,7 @@ func (g *game) draw() {
 func (g *game) onDraw(_ *gtk.DrawingArea, ctx *cairo.Context) {
 	g.drawBackground(ctx, backgroundColor)
 	for i := range entities {
-		entities[i].draw(ctx, g)
+		entities[i].draw(ctx)
 	}
 }
 

@@ -41,6 +41,7 @@ func (b *BreakOut) mainLoop() {
 		select {
 		case <-b.ticker.C:
 			b.game.update()
+			b.game.checkCollision()
 			b.game.draw()
 		case <-b.tickerQuit:
 			b.ticker.Stop()

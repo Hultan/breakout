@@ -4,7 +4,20 @@ import (
 	"github.com/gotk3/gotk3/cairo"
 )
 
-type drawable interface {
-	draw(*cairo.Context, *game)
+type gameObject interface {
+	drawer
+	updater
+	collider
+}
+
+type drawer interface {
+	draw(*cairo.Context)
+}
+
+type updater interface {
 	update()
+}
+
+type collider interface {
+	collide(object gameObject)
 }
