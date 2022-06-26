@@ -1,7 +1,6 @@
 package game
 
 import (
-	"fmt"
 	"image/color"
 	"math"
 
@@ -10,7 +9,7 @@ import (
 
 const ballSize = 10
 const ballStartingSpeedX = 0
-const ballStartingSpeedY = 3
+const ballStartingSpeedY = 5
 
 var ballColor = color.RGBA{R: 255, G: 255, B: 255, A: 255}
 
@@ -34,45 +33,47 @@ func (b *ball) draw(ctx *cairo.Context) {
 }
 
 func (b *ball) update() {
-	fmt.Println("ball")
 	b.position = b.position.move(b.speed)
 }
 
 func (b *ball) collide(e gameObject) {
-	fmt.Println(e)
+	switch o := e.(type) {
+	case *cage:
+		if o.orientation == orientationHorizontal {
+			b.speed.dy = -b.speed.dy
+		} else {
+			b.speed.dx = -b.speed.dx
+		}
+	case *player:
+		// cos(theta) = adjacent/hypotenuse
+		d := math.Abs(o.x+o.w/2-b.x) / o.w
+		b.speed.dx = b.speed.dx - d*6
+		b.speed.dy = -b.speed.dy
+	case *cageBottom:
+		// end of game, for now
+		panic("eog")
+	}
 }
 
 func (b *ball) collidesWith(e gameObject) bool {
+	var r rectangle
 	switch o := e.(type) {
 	case *cage:
-
-		p := o.position
-		s := o.size
-		dx := math.Abs(b.position.x - p.x)
-		dy := math.Abs(b.position.y - p.y)
-
-		if dx > (s.w/2 + b.size.h) {
-			return false
-		}
-		if dy > (s.h/2 + b.size.h) {
-			return false
-		}
-
-		if dx <= (s.w / 2) {
-			return true
-		}
-		if dy <= (s.h / 2) {
-			return true
-		}
-
-		// Calculate corner distance
-		d := math.Pow(dx-s.w/2, 2) +
-			math.Pow(dy-s.h/2, 2)
-		return d <= math.Pow(b.size.h, 2)
-
+		r = o.rectangle
+	case *player:
+		r = o.rectangle
+	case *cageBottom:
+		r = o.rectangle
 	}
 
-	return false
+	// Check if the ball intersects the rectangle
+	// https://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection
+	closestX := clamp(b.x, r.x, r.x+r.w)
+	closestY := clamp(b.y, r.y, r.y+r.h)
+	dx := b.x - closestX
+	dy := b.y - closestY
+	dsq := dx*dx + dy*dy
+	return dsq < b.w*b.w
 }
 
 func (b *ball) typ() entityType {

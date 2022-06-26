@@ -37,6 +37,10 @@ func (r rectangle) rect() (float64, float64, float64, float64) {
 	return r.x, r.y, r.w, r.h
 }
 
+func (r rectangle) center() (float64, float64) {
+	return r.x + r.w/2, r.y + r.h/2
+}
+
 type speed struct {
 	dx, dy float64
 }

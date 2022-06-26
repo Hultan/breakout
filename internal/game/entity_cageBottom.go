@@ -28,10 +28,10 @@ func (c *cageBottom) draw(ctx *cairo.Context) {
 }
 
 func (c *cageBottom) update() {
-	fmt.Println("cageBottom")
 }
 
 func (c *cageBottom) collide(e gameObject) {
+	fmt.Println(e)
 }
 
 func (c *cageBottom) typ() entityType {

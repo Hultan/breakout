@@ -30,10 +30,10 @@ func newGame(da *gtk.DrawingArea, name string, width, height float64) *game {
 
 	// Entities
 	entities = append(entities, g.play)
-	entities = append(entities, newCage(0, 0, 10, g.height))                      // left cage
-	entities = append(entities, newCage(0, 0, g.width, 10))                       // top cage
-	entities = append(entities, newCage(g.width-10, 0, g.width, g.height))        // right cage
-	entities = append(entities, newCageBottom(0, g.height-10, g.width, g.height)) // bottom cage
+	entities = append(entities, newCage(0, 0, 10, g.height, orientationVertical))               // left cage
+	entities = append(entities, newCage(0, 0, g.width, 10, orientationHorizontal))              // top cage
+	entities = append(entities, newCage(g.width-10, 0, g.width, g.height, orientationVertical)) // right cage
+	entities = append(entities, newCageBottom(0, g.height-10, g.width, g.height))               // bottom cage
 	theBall = newBall(g)
 	entities = append(entities, theBall)
 

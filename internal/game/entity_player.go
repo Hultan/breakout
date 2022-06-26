@@ -34,10 +34,10 @@ func (p *player) draw(ctx *cairo.Context) {
 }
 
 func (p *player) update() {
-	fmt.Println("entity")
 }
 
 func (p *player) collide(e gameObject) {
+	fmt.Println(e)
 }
 
 func (p *player) typ() entityType {
