@@ -9,7 +9,7 @@ import (
 
 const ballSize = 10
 const ballStartingSpeedX = 0
-const ballStartingSpeedY = 5
+const ballStartingSpeedY = 7
 
 var ballColor = color.RGBA{R: 255, G: 255, B: 255, A: 255}
 
@@ -61,7 +61,7 @@ func (b *ball) collide(e gameObject) {
 		b.resetBallPosition()
 	case *brick:
 		b.speed.dy = -b.speed.dy
-		removeEntity(e)
+		o.dead = true
 	}
 }
 
@@ -75,6 +75,9 @@ func (b *ball) collidesWith(e gameObject) bool {
 	case *cageBottom:
 		r = o.rectangle
 	case *brick:
+		if o.dead {
+			return false
+		}
 		r = o.rectangle
 	}
 

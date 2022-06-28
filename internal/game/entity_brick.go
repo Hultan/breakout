@@ -9,20 +9,28 @@ import (
 
 type brick struct {
 	entity
+	dead bool
 }
 
-var brickColor = color.RGBA{R: 0, G: 0, B: 50, A: 255}
+var brickColors = []color.RGBA{
+	{R: 0, G: 50, B: 0, A: 255},
+	{R: 0, G: 100, B: 0, A: 255},
+	{R: 0, G: 150, B: 0, A: 255},
+}
 
-func newBrick(size, x, y float64) *brick {
+func newBrick(col, size int, x, y float64) *brick {
 	return &brick{
-		entity{
-			rectangle: newRectangle(x, y, size*40, 20),
-			color:     brickColor,
+		entity: entity{
+			rectangle: newRectangle(x, y, float64(size)*brickWidth, 20),
+			color:     brickColors[col],
 		},
 	}
 }
 
 func (b *brick) draw(ctx *cairo.Context) {
+	if b.dead {
+		return
+	}
 	ctx.SetSourceRGBA(getColor(b.color))
 	ctx.Rectangle(b.rect())
 	ctx.Fill()

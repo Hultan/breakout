@@ -2,6 +2,8 @@ package game
 
 import (
 	"image/color"
+	"strconv"
+	"strings"
 
 	"github.com/gotk3/gotk3/cairo"
 	"github.com/gotk3/gotk3/gtk"
@@ -9,6 +11,11 @@ import (
 
 var backgroundColor = color.RGBA{R: 128, G: 128, B: 128, A: 255}
 var entities []gameObject
+
+const (
+	brickWidth  = 30.0
+	levelHeight = 40.0
+)
 
 type game struct {
 	da            *gtk.DrawingArea
@@ -39,7 +46,7 @@ func newGame(da *gtk.DrawingArea, name string, w, h float64) *game {
 	entities = append(entities, newCageBottom(0, h-10, w, h))                // bottom cage
 	entities = append(entities, g.ball)
 
-	entities = append(entities, newBrick(3, 100, 100))
+	g.loadLevel(1)
 
 	return g
 }
@@ -80,4 +87,21 @@ func (g *game) drawBackground(ctx *cairo.Context, color color.Color) {
 	ctx.SetSourceRGBA(getColor(color))
 	ctx.Rectangle(0, 0, theGame.width, theGame.height)
 	ctx.Fill()
+}
+
+func (g *game) loadLevel(level int) {
+	h := levelHeight
+	for _, row := range levels[level].bricks {
+		w := 50.0
+		fields := strings.Fields(row)
+		for _, s := range fields {
+			col, err := strconv.Atoi(string(s[0]))
+			if err != nil {
+				panic(err)
+			}
+			entities = append(entities, newBrick(col-1, len(s), w, h))
+			w += float64(len(s))*brickWidth + brickWidth
+		}
+		h += levelHeight
+	}
 }
