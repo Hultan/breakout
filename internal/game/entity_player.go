@@ -15,9 +15,7 @@ var playerColor = color.RGBA{R: 50, G: 0, B: 0, A: 255}
 type player struct {
 	name string
 	entity
-	playerWidth    float64
-	isLeftPressed  bool
-	isRightPressed bool
+	playerWidth float64
 }
 
 func newPlayer(name string) *player {
@@ -41,12 +39,12 @@ func (p *player) draw(ctx *cairo.Context) {
 }
 
 func (p *player) update() {
-	if p.isLeftPressed {
+	if theGame.keysPressed['a'] {
 		p.x -= 7
 		if p.x < 10 {
 			p.x = 10
 		}
-	} else if p.isRightPressed {
+	} else if theGame.keysPressed['d'] {
 		p.x += 7
 		if p.x > windowWidth-p.playerWidth-10 {
 			p.x = windowWidth - p.playerWidth - 10

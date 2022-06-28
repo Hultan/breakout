@@ -10,16 +10,17 @@ import (
 var backgroundColor = color.RGBA{R: 128, G: 128, B: 128, A: 255}
 
 type game struct {
-	da *gtk.DrawingArea
+	da          *gtk.DrawingArea
+	keysPressed map[rune]bool
 }
 
 var entities []gameObject
-var theBall *ball
-var thePlayer *player
 
 func newGame(da *gtk.DrawingArea, name string) *game {
+	m := make(map[rune]bool, 5)
 	g := &game{
-		da: da,
+		da:          da,
+		keysPressed: m,
 	}
 	g.da.Connect("draw", g.onDraw)
 

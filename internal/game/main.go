@@ -12,10 +12,12 @@ type BreakOut struct {
 	tickerQuit chan struct{}
 	ticker     *time.Ticker
 	speed      time.Duration
-	game       *game
 }
 
 var windowWidth, windowHeight float64
+var theGame *game
+var theBall *ball
+var thePlayer *player
 
 func NewBreakOut(win *gtk.ApplicationWindow, da *gtk.DrawingArea) *BreakOut {
 	b := &BreakOut{
@@ -23,11 +25,13 @@ func NewBreakOut(win *gtk.ApplicationWindow, da *gtk.DrawingArea) *BreakOut {
 		speed: 20,
 	}
 
-	b.win.Connect("key-press-event", b.onKeyPress)
-	b.win.Connect("key-release-event", b.onKeyRelease)
 	a := b.win.GetAllocation()
 	windowWidth, windowHeight = float64(a.GetWidth()), float64(a.GetHeight())
-	b.game = newGame(da, "per")
+
+	b.win.Connect("key-press-event", b.onKeyPress)
+	b.win.Connect("key-release-event", b.onKeyRelease)
+
+	theGame = newGame(da, "per")
 
 	b.ticker = time.NewTicker(b.speed * time.Millisecond)
 	b.tickerQuit = make(chan struct{})
@@ -44,9 +48,9 @@ func (b *BreakOut) mainLoop() {
 	for {
 		select {
 		case <-b.ticker.C:
-			b.game.update()
-			b.game.checkCollision()
-			b.game.draw()
+			theGame.update()
+			theGame.checkCollision()
+			theGame.draw()
 		case <-b.tickerQuit:
 			b.ticker.Stop()
 			return
@@ -61,10 +65,10 @@ func (b *BreakOut) onKeyPress(_ *gtk.ApplicationWindow, e *gdk.Event) {
 	case gdk.KEY_q, gdk.KEY_Q:
 		b.quit()
 		b.win.Close()
-	case gdk.KEY_Left:
-		thePlayer.isLeftPressed = true
-	case gdk.KEY_Right:
-		thePlayer.isRightPressed = true
+	case gdk.KEY_a, gdk.KEY_A:
+		theGame.keysPressed['a'] = true
+	case gdk.KEY_d, gdk.KEY_D:
+		theGame.keysPressed['d'] = true
 	}
 }
 
@@ -75,10 +79,10 @@ func (b *BreakOut) onKeyRelease(_ *gtk.ApplicationWindow, e *gdk.Event) {
 	case gdk.KEY_q, gdk.KEY_Q:
 		b.quit()
 		b.win.Close()
-	case gdk.KEY_Left:
-		thePlayer.isLeftPressed = false
-	case gdk.KEY_Right:
-		thePlayer.isRightPressed = false
+	case gdk.KEY_a, gdk.KEY_A:
+		theGame.keysPressed['a'] = false
+	case gdk.KEY_d, gdk.KEY_D:
+		theGame.keysPressed['d'] = false
 	}
 }
 
