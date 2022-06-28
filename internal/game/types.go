@@ -37,10 +37,6 @@ func (r rectangle) rect() (float64, float64, float64, float64) {
 	return r.x, r.y, r.w, r.h
 }
 
-func (r rectangle) center() (float64, float64) {
-	return r.x + r.w/2, r.y + r.h/2
-}
-
 type speed struct {
 	dx, dy float64
 }
@@ -50,23 +46,14 @@ type collisionType int
 const (
 	onCollisionNone collisionType = iota
 	onCollisionBounce
+	onCollisionRemove
 	onCollisionExplode
 	onCollisionBallLost
-)
-
-type entityType int
-
-const (
-	entityTypePlayer entityType = iota
-	entityTypeBall
-	entityTypeCage
-	entityTypeCageBottom
 )
 
 type entity struct {
 	rectangle
 	speed
 	collisionType
-	entityType
 	color color.Color
 }

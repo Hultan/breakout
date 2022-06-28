@@ -39,6 +39,8 @@ func newGame(da *gtk.DrawingArea, name string, w, h float64) *game {
 	entities = append(entities, newCageBottom(0, h-10, w, h))                // bottom cage
 	entities = append(entities, g.ball)
 
+	entities = append(entities, newBrick(3, 100, 100))
+
 	return g
 }
 

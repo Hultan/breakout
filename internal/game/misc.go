@@ -18,3 +18,12 @@ func clamp(v, minv, maxv float64) float64 {
 
 	return v
 }
+
+func removeEntity(e gameObject) {
+	for i := range entities {
+		if entities[i] == e {
+			entities[i] = entities[len(entities)-1]
+			entities = entities[:len(entities)-1]
+		}
+	}
+}

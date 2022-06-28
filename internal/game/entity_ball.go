@@ -59,6 +59,9 @@ func (b *ball) collide(e gameObject) {
 	case *cageBottom:
 		// end of game, for now
 		b.resetBallPosition()
+	case *brick:
+		b.speed.dy = -b.speed.dy
+		removeEntity(e)
 	}
 }
 
@@ -71,6 +74,8 @@ func (b *ball) collidesWith(e gameObject) bool {
 		r = o.rectangle
 	case *cageBottom:
 		r = o.rectangle
+	case *brick:
+		r = o.rectangle
 	}
 
 	// Check if the ball intersects the rectangle
@@ -81,8 +86,4 @@ func (b *ball) collidesWith(e gameObject) bool {
 	dy := b.y - closestY
 	dsq := dx*dx + dy*dy
 	return dsq < b.w*b.w
-}
-
-func (b *ball) typ() entityType {
-	return entityTypeBall
 }

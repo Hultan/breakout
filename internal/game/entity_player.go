@@ -55,7 +55,3 @@ func (p *player) update() {
 func (p *player) collide(e gameObject) {
 	fmt.Println("Collision with player")
 }
-
-func (p *player) typ() entityType {
-	return entityTypePlayer
-}
