@@ -64,9 +64,15 @@ func (b *BreakOut) onKeyPress(_ *gtk.ApplicationWindow, e *gdk.Event) {
 		b.quit()
 		b.win.Close()
 	case gdk.KEY_a, gdk.KEY_A:
-		theGame.keysPressed['a'] = true
+		theGame.keysPressed["a"] = true
 	case gdk.KEY_d, gdk.KEY_D:
-		theGame.keysPressed['d'] = true
+		theGame.keysPressed["d"] = true
+	case gdk.KEY_Left:
+		theGame.keysPressed["left"] = true
+	case gdk.KEY_Right:
+		theGame.keysPressed["right"] = true
+	case gdk.KEY_Shift_L, gdk.KEY_Shift_R:
+		theGame.keysPressed["shift"] = true
 	}
 }
 
@@ -78,9 +84,15 @@ func (b *BreakOut) onKeyRelease(_ *gtk.ApplicationWindow, e *gdk.Event) {
 		b.quit()
 		b.win.Close()
 	case gdk.KEY_a, gdk.KEY_A:
-		theGame.keysPressed['a'] = false
+		theGame.keysPressed["a"] = false
 	case gdk.KEY_d, gdk.KEY_D:
-		theGame.keysPressed['d'] = false
+		theGame.keysPressed["d"] = false
+	case gdk.KEY_Left:
+		theGame.keysPressed["left"] = false
+	case gdk.KEY_Right:
+		theGame.keysPressed["right"] = false
+	case gdk.KEY_Shift_L, gdk.KEY_Shift_R:
+		theGame.keysPressed["shift"] = false
 	}
 }
 

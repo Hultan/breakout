@@ -39,13 +39,17 @@ func (p *player) draw(ctx *cairo.Context) {
 }
 
 func (p *player) update() {
-	if theGame.keysPressed['a'] {
-		p.x -= 7
+	turbo := 1.0
+	if theGame.keysPressed["shift"] {
+		turbo = 1.8
+	}
+	if theGame.keysPressed["a"] || theGame.keysPressed["left"] {
+		p.x -= 6 * turbo
 		if p.x < 10 {
 			p.x = 10
 		}
-	} else if theGame.keysPressed['d'] {
-		p.x += 7
+	} else if theGame.keysPressed["d"] || theGame.keysPressed["right"] {
+		p.x += 6 * turbo
 		if p.x > theGame.width-p.playerWidth-10 {
 			p.x = theGame.width - p.playerWidth - 10
 		}

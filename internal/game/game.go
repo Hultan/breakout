@@ -19,7 +19,7 @@ const (
 
 type game struct {
 	da            *gtk.DrawingArea
-	keysPressed   map[rune]bool
+	keysPressed   map[string]bool
 	player        *player
 	ball          *ball
 	width, height float64
@@ -28,7 +28,7 @@ type game struct {
 func newGame(da *gtk.DrawingArea, name string, w, h float64) *game {
 	g := &game{
 		da:          da,
-		keysPressed: make(map[rune]bool, 5),
+		keysPressed: make(map[string]bool, 5),
 		ball:        newBall(w, h),
 		player:      newPlayer(name, w, h),
 		width:       w,
