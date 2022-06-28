@@ -18,8 +18,8 @@ type player struct {
 	playerWidth float64
 }
 
-func newPlayer(name string) *player {
-	x, y := (windowWidth-playerStartingWidth)/2, windowHeight-50
+func newPlayer(name string, w, h float64) *player {
+	x, y := (w-playerStartingWidth)/2, h-50
 	return &player{
 		name: name,
 		entity: entity{
@@ -46,8 +46,8 @@ func (p *player) update() {
 		}
 	} else if theGame.keysPressed['d'] {
 		p.x += 6
-		if p.x > windowWidth-p.playerWidth-10 {
-			p.x = windowWidth - p.playerWidth - 10
+		if p.x > theGame.width-p.playerWidth-10 {
+			p.x = theGame.width - p.playerWidth - 10
 		}
 	}
 }

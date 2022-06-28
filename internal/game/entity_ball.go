@@ -17,11 +17,9 @@ type ball struct {
 	entity
 }
 
-func newBall() *ball {
+func newBall(w, h float64) *ball {
 	return &ball{
 		entity{
-			rectangle:     newRectangle(windowWidth/2, windowHeight*2/3, ballSize, ballSize),
-			speed:         speed{ballStartingSpeedX, ballStartingSpeedY},
 			collisionType: onCollisionNone,
 			color:         ballColor,
 		},
@@ -29,7 +27,7 @@ func newBall() *ball {
 }
 
 func (b *ball) resetBallPosition() {
-	b.rectangle = newRectangle(windowWidth/2, windowHeight*2/3, ballSize, ballSize)
+	b.rectangle = newRectangle(theGame.width/2, theGame.height*1/3, ballSize, ballSize)
 	b.speed = speed{ballStartingSpeedX, ballStartingSpeedY}
 }
 

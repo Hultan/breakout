@@ -14,7 +14,6 @@ type BreakOut struct {
 	speed      time.Duration
 }
 
-var windowWidth, windowHeight float64
 var theGame *game
 
 func NewBreakOut(win *gtk.ApplicationWindow, da *gtk.DrawingArea) *BreakOut {
@@ -23,14 +22,16 @@ func NewBreakOut(win *gtk.ApplicationWindow, da *gtk.DrawingArea) *BreakOut {
 		speed: 20,
 	}
 
-	a := b.win.GetAllocation()
-	windowWidth, windowHeight = float64(a.GetWidth()), float64(a.GetHeight())
-
+	// Events
 	b.win.Connect("key-press-event", b.onKeyPress)
 	b.win.Connect("key-release-event", b.onKeyRelease)
 
-	theGame = newGame(da, "per")
+	// Create game object
+	a := win.GetAllocation()
+	theGame = newGame(da, "per", float64(a.GetWidth()), float64(a.GetHeight()))
+	theGame.initialize()
 
+	// Create ticker object
 	b.ticker = time.NewTicker(b.speed * time.Millisecond)
 	b.tickerQuit = make(chan struct{})
 
@@ -38,7 +39,6 @@ func NewBreakOut(win *gtk.ApplicationWindow, da *gtk.DrawingArea) *BreakOut {
 }
 
 func (b *BreakOut) Start() {
-
 	go b.mainLoop()
 }
 

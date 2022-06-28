@@ -8,33 +8,42 @@ import (
 )
 
 var backgroundColor = color.RGBA{R: 128, G: 128, B: 128, A: 255}
-
-type game struct {
-	da          *gtk.DrawingArea
-	keysPressed map[rune]bool
-	ball        *ball
-}
-
 var entities []gameObject
 
-func newGame(da *gtk.DrawingArea, name string) *game {
-	m := make(map[rune]bool, 5)
+type game struct {
+	da            *gtk.DrawingArea
+	keysPressed   map[rune]bool
+	player        *player
+	ball          *ball
+	width, height float64
+}
+
+func newGame(da *gtk.DrawingArea, name string, w, h float64) *game {
 	g := &game{
 		da:          da,
-		keysPressed: m,
+		keysPressed: make(map[rune]bool, 5),
+		ball:        newBall(w, h),
+		player:      newPlayer(name, w, h),
+		width:       w,
+		height:      h,
 	}
+
+	// Events
 	g.da.Connect("draw", g.onDraw)
 
 	// Entities
-	g.ball = newBall()
-	entities = append(entities, newPlayer(name))
-	entities = append(entities, newCage(0, 0, 10, windowHeight, orientationVertical))                       // left cage
-	entities = append(entities, newCage(0, 0, windowWidth, 10, orientationHorizontal))                      // top cage
-	entities = append(entities, newCage(windowWidth-10, 0, windowWidth, windowHeight, orientationVertical)) // right cage
-	entities = append(entities, newCageBottom(0, windowHeight-10, windowWidth, windowHeight))               // bottom cage
+	entities = append(entities, g.player)
+	entities = append(entities, newCage(0, 0, 10, h, orientationVertical))   // left cage
+	entities = append(entities, newCage(0, 0, w, 10, orientationHorizontal)) // top cage
+	entities = append(entities, newCage(w-10, 0, w, h, orientationVertical)) // right cage
+	entities = append(entities, newCageBottom(0, h-10, w, h))                // bottom cage
 	entities = append(entities, g.ball)
 
 	return g
+}
+
+func (g *game) initialize() {
+	g.ball.resetBallPosition()
 }
 
 func (g *game) update() {
@@ -67,6 +76,6 @@ func (g *game) onDraw(_ *gtk.DrawingArea, ctx *cairo.Context) {
 
 func (g *game) drawBackground(ctx *cairo.Context, color color.Color) {
 	ctx.SetSourceRGBA(getColor(color))
-	ctx.Rectangle(0, 0, windowWidth, windowHeight)
+	ctx.Rectangle(0, 0, theGame.width, theGame.height)
 	ctx.Fill()
 }
