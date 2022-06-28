@@ -22,6 +22,7 @@ func NewBreakOut(win *gtk.ApplicationWindow, da *gtk.DrawingArea) *BreakOut {
 	}
 
 	b.win.Connect("key-press-event", b.onKeyPress)
+	b.win.Connect("key-release-event", b.onKeyRelease)
 	a := b.win.GetAllocation()
 	b.game = newGame(da, "per", float64(a.GetWidth()), float64(a.GetHeight()))
 
@@ -58,9 +59,23 @@ func (b *BreakOut) onKeyPress(_ *gtk.ApplicationWindow, e *gdk.Event) {
 		b.quit()
 		b.win.Close()
 	case gdk.KEY_Left:
-		b.game.play.position.x -= 10
+		b.game.play.isLeftPressed = true
 	case gdk.KEY_Right:
-		b.game.play.position.x += 10
+		b.game.play.isRightPressed = true
+	}
+}
+
+func (b *BreakOut) onKeyRelease(_ *gtk.ApplicationWindow, e *gdk.Event) {
+	ke := gdk.EventKeyNewFromEvent(e)
+
+	switch ke.KeyVal() {
+	case gdk.KEY_q, gdk.KEY_Q:
+		b.quit()
+		b.win.Close()
+	case gdk.KEY_Left:
+		b.game.play.isLeftPressed = false
+	case gdk.KEY_Right:
+		b.game.play.isRightPressed = false
 	}
 }
 

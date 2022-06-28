@@ -58,7 +58,7 @@ func (b *ball) collide(e gameObject) {
 
 		// Calculate the distance from the center of the paddle
 		d := (o.x + o.w/2 - b.x) / o.w
-		b.speed.dx = b.speed.dx - d*6
+		b.speed.dx = b.speed.dx - d*7
 		b.speed.dy = -b.speed.dy
 	case *cageBottom:
 		// end of game, for now
