@@ -40,12 +40,12 @@ func (p *player) draw(ctx *cairo.Context) {
 
 func (p *player) update() {
 	if theGame.keysPressed['a'] {
-		p.x -= 7
+		p.x -= 6
 		if p.x < 10 {
 			p.x = 10
 		}
 	} else if theGame.keysPressed['d'] {
-		p.x += 7
+		p.x += 6
 		if p.x > windowWidth-p.playerWidth-10 {
 			p.x = windowWidth - p.playerWidth - 10
 		}

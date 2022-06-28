@@ -16,8 +16,6 @@ type BreakOut struct {
 
 var windowWidth, windowHeight float64
 var theGame *game
-var theBall *ball
-var thePlayer *player
 
 func NewBreakOut(win *gtk.ApplicationWindow, da *gtk.DrawingArea) *BreakOut {
 	b := &BreakOut{
