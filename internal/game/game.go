@@ -10,31 +10,28 @@ import (
 var backgroundColor = color.RGBA{R: 128, G: 128, B: 128, A: 255}
 
 type game struct {
-	da            *gtk.DrawingArea
-	play          *player
-	width, height float64
+	da   *gtk.DrawingArea
+	play *player
 }
 
 var entities []gameObject
 var theBall *ball
 
-func newGame(da *gtk.DrawingArea, name string, width, height float64) *game {
+func newGame(da *gtk.DrawingArea, name string) *game {
 	g := &game{
-		da:     da,
-		play:   newPlayer(name, width, height),
-		width:  width,
-		height: height,
+		da:   da,
+		play: newPlayer(name),
 	}
 
 	g.da.Connect("draw", g.onDraw)
 
 	// Entities
 	entities = append(entities, g.play)
-	entities = append(entities, newCage(0, 0, 10, g.height, orientationVertical))               // left cage
-	entities = append(entities, newCage(0, 0, g.width, 10, orientationHorizontal))              // top cage
-	entities = append(entities, newCage(g.width-10, 0, g.width, g.height, orientationVertical)) // right cage
-	entities = append(entities, newCageBottom(0, g.height-10, g.width, g.height))               // bottom cage
-	theBall = newBall(g)
+	entities = append(entities, newCage(0, 0, 10, windowHeight, orientationVertical))                       // left cage
+	entities = append(entities, newCage(0, 0, windowWidth, 10, orientationHorizontal))                      // top cage
+	entities = append(entities, newCage(windowWidth-10, 0, windowWidth, windowHeight, orientationVertical)) // right cage
+	entities = append(entities, newCageBottom(0, windowHeight-10, windowWidth, windowHeight))               // bottom cage
+	theBall = newBall()
 	entities = append(entities, theBall)
 
 	return g
@@ -70,6 +67,6 @@ func (g *game) onDraw(_ *gtk.DrawingArea, ctx *cairo.Context) {
 
 func (g *game) drawBackground(ctx *cairo.Context, color color.Color) {
 	ctx.SetSourceRGBA(getColor(color))
-	ctx.Rectangle(0, 0, g.width, g.height)
+	ctx.Rectangle(0, 0, windowWidth, windowHeight)
 	ctx.Fill()
 }

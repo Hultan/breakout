@@ -15,23 +15,21 @@ var ballColor = color.RGBA{R: 255, G: 255, B: 255, A: 255}
 
 type ball struct {
 	entity
-	g *game
 }
 
-func newBall(g *game) *ball {
+func newBall() *ball {
 	return &ball{
 		entity{
-			rectangle:     newRectangle(g.width/2, g.height*2/3, ballSize, ballSize),
+			rectangle:     newRectangle(windowWidth/2, windowHeight*2/3, ballSize, ballSize),
 			speed:         speed{ballStartingSpeedX, ballStartingSpeedY},
 			collisionType: onCollisionNone,
 			color:         ballColor,
 		},
-		g,
 	}
 }
 
 func (b *ball) resetBallPosition() {
-	b.rectangle = newRectangle(b.g.width/2, b.g.height*2/3, ballSize, ballSize)
+	b.rectangle = newRectangle(windowWidth/2, windowHeight*2/3, ballSize, ballSize)
 	b.speed = speed{ballStartingSpeedX, ballStartingSpeedY}
 }
 

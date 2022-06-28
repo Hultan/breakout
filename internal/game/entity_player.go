@@ -16,13 +16,12 @@ type player struct {
 	name string
 	entity
 	playerWidth    float64
-	windowWidth    float64
 	isLeftPressed  bool
 	isRightPressed bool
 }
 
-func newPlayer(name string, winWidth, winHeight float64) *player {
-	x, y := (winWidth-playerStartingWidth)/2, winHeight-50
+func newPlayer(name string) *player {
+	x, y := (windowWidth-playerStartingWidth)/2, windowHeight-50
 	return &player{
 		name: name,
 		entity: entity{
@@ -32,7 +31,6 @@ func newPlayer(name string, winWidth, winHeight float64) *player {
 			color:         playerColor,
 		},
 		playerWidth: playerStartingWidth,
-		windowWidth: winWidth,
 	}
 }
 
@@ -50,8 +48,8 @@ func (p *player) update() {
 		}
 	} else if p.isRightPressed {
 		p.x += 7
-		if p.x > p.windowWidth-p.playerWidth-10 {
-			p.x = p.windowWidth - p.playerWidth - 10
+		if p.x > windowWidth-p.playerWidth-10 {
+			p.x = windowWidth - p.playerWidth - 10
 		}
 	}
 }

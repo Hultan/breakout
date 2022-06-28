@@ -15,6 +15,8 @@ type BreakOut struct {
 	game       *game
 }
 
+var windowWidth, windowHeight float64
+
 func NewBreakOut(win *gtk.ApplicationWindow, da *gtk.DrawingArea) *BreakOut {
 	b := &BreakOut{
 		win:   win,
@@ -24,7 +26,8 @@ func NewBreakOut(win *gtk.ApplicationWindow, da *gtk.DrawingArea) *BreakOut {
 	b.win.Connect("key-press-event", b.onKeyPress)
 	b.win.Connect("key-release-event", b.onKeyRelease)
 	a := b.win.GetAllocation()
-	b.game = newGame(da, "per", float64(a.GetWidth()), float64(a.GetHeight()))
+	windowWidth, windowHeight = float64(a.GetWidth()), float64(a.GetHeight())
+	b.game = newGame(da, "per")
 
 	b.ticker = time.NewTicker(b.speed * time.Millisecond)
 	b.tickerQuit = make(chan struct{})
