@@ -42,7 +42,7 @@ func (c *cage) update() {
 }
 
 func (c *cage) collide(e gameObject) {
-	fmt.Println(e)
+	fmt.Println("Collision with cage")
 }
 
 func (c *cage) typ() entityType {

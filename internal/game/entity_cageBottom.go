@@ -31,7 +31,7 @@ func (c *cageBottom) update() {
 }
 
 func (c *cageBottom) collide(e gameObject) {
-	fmt.Println(e)
+	fmt.Println("Game over!")
 }
 
 func (c *cageBottom) typ() entityType {

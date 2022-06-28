@@ -15,15 +15,24 @@ var ballColor = color.RGBA{R: 255, G: 255, B: 255, A: 255}
 
 type ball struct {
 	entity
+	g *game
 }
 
 func newBall(g *game) *ball {
-	return &ball{entity{
-		rectangle:     newRectangle(g.width/2, g.height*2/3, ballSize, ballSize),
-		speed:         speed{ballStartingSpeedX, ballStartingSpeedY},
-		collisionType: onCollisionNone,
-		color:         ballColor,
-	}}
+	return &ball{
+		entity{
+			rectangle:     newRectangle(g.width/2, g.height*2/3, ballSize, ballSize),
+			speed:         speed{ballStartingSpeedX, ballStartingSpeedY},
+			collisionType: onCollisionNone,
+			color:         ballColor,
+		},
+		g,
+	}
+}
+
+func (b *ball) resetBallPosition() {
+	b.rectangle = newRectangle(b.g.width/2, b.g.height*2/3, ballSize, ballSize)
+	b.speed = speed{ballStartingSpeedX, ballStartingSpeedY}
 }
 
 func (b *ball) draw(ctx *cairo.Context) {
@@ -46,12 +55,14 @@ func (b *ball) collide(e gameObject) {
 		}
 	case *player:
 		// cos(theta) = adjacent/hypotenuse
-		d := math.Abs(o.x+o.w/2-b.x) / o.w
+
+		// Calculate the distance from the center of the paddle
+		d := (o.x + o.w/2 - b.x) / o.w
 		b.speed.dx = b.speed.dx - d*6
 		b.speed.dy = -b.speed.dy
 	case *cageBottom:
 		// end of game, for now
-		panic("eog")
+		b.resetBallPosition()
 	}
 }
 
