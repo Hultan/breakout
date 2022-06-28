@@ -10,28 +10,28 @@ import (
 var backgroundColor = color.RGBA{R: 128, G: 128, B: 128, A: 255}
 
 type game struct {
-	da   *gtk.DrawingArea
-	play *player
+	da *gtk.DrawingArea
 }
 
 var entities []gameObject
 var theBall *ball
+var thePlayer *player
 
 func newGame(da *gtk.DrawingArea, name string) *game {
 	g := &game{
-		da:   da,
-		play: newPlayer(name),
+		da: da,
 	}
-
 	g.da.Connect("draw", g.onDraw)
 
 	// Entities
-	entities = append(entities, g.play)
+	thePlayer = newPlayer(name)
+	theBall = newBall()
+
+	entities = append(entities, thePlayer)
 	entities = append(entities, newCage(0, 0, 10, windowHeight, orientationVertical))                       // left cage
 	entities = append(entities, newCage(0, 0, windowWidth, 10, orientationHorizontal))                      // top cage
 	entities = append(entities, newCage(windowWidth-10, 0, windowWidth, windowHeight, orientationVertical)) // right cage
 	entities = append(entities, newCageBottom(0, windowHeight-10, windowWidth, windowHeight))               // bottom cage
-	theBall = newBall()
 	entities = append(entities, theBall)
 
 	return g

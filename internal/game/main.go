@@ -62,9 +62,9 @@ func (b *BreakOut) onKeyPress(_ *gtk.ApplicationWindow, e *gdk.Event) {
 		b.quit()
 		b.win.Close()
 	case gdk.KEY_Left:
-		b.game.play.isLeftPressed = true
+		thePlayer.isLeftPressed = true
 	case gdk.KEY_Right:
-		b.game.play.isRightPressed = true
+		thePlayer.isRightPressed = true
 	}
 }
 
@@ -76,9 +76,9 @@ func (b *BreakOut) onKeyRelease(_ *gtk.ApplicationWindow, e *gdk.Event) {
 		b.quit()
 		b.win.Close()
 	case gdk.KEY_Left:
-		b.game.play.isLeftPressed = false
+		thePlayer.isLeftPressed = false
 	case gdk.KEY_Right:
-		b.game.play.isRightPressed = false
+		thePlayer.isRightPressed = false
 	}
 }
 
