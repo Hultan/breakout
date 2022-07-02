@@ -25,8 +25,8 @@ type game struct {
 	keyIsPressedMutex sync.RWMutex
 	player            *player
 	ball              *ball
-	score             *score
-	pause             *pause
+	scorer            *score
+	pauser            *pause
 	counter           *brickCounter
 	width, height     float64
 	level             int
@@ -39,7 +39,7 @@ func newGame(da *gtk.DrawingArea, name string, w, h float64) *game {
 		keyIsPressed: make(map[string]bool, 5),
 		ball:         newBall(),
 		player:       newPlayer(name, w, h),
-		score:        newScore(),
+		scorer:       newScore(),
 		counter:      newBrickCounter(),
 		width:        w,
 		height:       h,
@@ -57,7 +57,7 @@ func newGame(da *gtk.DrawingArea, name string, w, h float64) *game {
 	entities = append(entities, g.ball)
 
 	// Non game entities, score etc
-	nonGameEntities = append(nonGameEntities, g.score)
+	nonGameEntities = append(nonGameEntities, g.scorer)
 	nonGameEntities = append(nonGameEntities, g.counter)
 
 	return g
@@ -91,30 +91,32 @@ func (g *game) draw() {
 }
 
 func (g *game) onDraw(_ *gtk.DrawingArea, ctx *cairo.Context) {
-	g.drawBackground(ctx, backgroundColor)
+	g.drawBackground(ctx)
+	// Draw game entities
 	for i := range entities {
 		entities[i].draw(ctx)
 	}
+	// Draw non-game entities (like texts, etc)
 	for i := range nonGameEntities {
 		nonGameEntities[i].draw(ctx)
 	}
 }
 
-func (g *game) drawBackground(ctx *cairo.Context, color color.Color) {
-	ctx.SetSourceRGBA(getColor(color))
-	ctx.Rectangle(0, 0, theGame.width, theGame.height)
+func (g *game) drawBackground(ctx *cairo.Context) {
+	ctx.SetSourceRGBA(getColor(backgroundColor))
+	ctx.Rectangle(0, 0, g.width, g.height)
 	ctx.Fill()
 }
 
 func (g *game) loadLevel() error {
 	h := levelHeight
-	for _, row := range levels[theGame.level].bricks {
+	for _, row := range levels[g.level].bricks {
 		w := 50.0
 		fields := strings.Fields(row)
 		for _, s := range fields {
 			brickType, err := strconv.Atoi(string(s[0]))
 			if err != nil {
-				return levelError{theGame.level, "unknown level"}
+				return levelError{g.level, "unknown brick type"}
 			}
 			if brickType > 0 {
 				b := newBrick(brickType, len(s), w, h)
@@ -125,4 +127,31 @@ func (g *game) loadLevel() error {
 		h += levelHeight
 	}
 	return nil
+}
+
+func (g *game) pause() {
+	// Pause game
+	g.isPaused = true
+	g.pauser = newPause()
+	nonGameEntities = append(nonGameEntities, g.pauser)
+}
+
+func (g *game) resume() {
+	// Resume game
+	g.isPaused = false
+
+	// Find pause entity
+	pauseIndex := -1
+	for i, e := range nonGameEntities {
+		if e == g.pauser {
+			pauseIndex = i
+			break
+		}
+	}
+
+	// Remove pause entity
+	if pauseIndex > 0 {
+		nonGameEntities[pauseIndex] = nonGameEntities[len(nonGameEntities)-1]
+		nonGameEntities = nonGameEntities[:len(nonGameEntities)-1]
+	}
 }

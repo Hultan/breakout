@@ -11,8 +11,7 @@ type cageBottom struct {
 func newCageBottom(x, y, w, h float64) *cageBottom {
 	return &cageBottom{
 		entity{
-			rectangle:     newRectangle(x, y, w, h),
-			collisionType: onCollisionBallLost,
+			rectangle: newRectangle(x, y, w, h),
 		},
 	}
 }

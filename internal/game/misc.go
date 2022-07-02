@@ -18,14 +18,3 @@ func clamp(v, minV, maxV float64) float64 {
 
 	return v
 }
-
-func lerp(v, minI, maxI, minO, maxO float64) float64 {
-	if v < minI {
-		return minO
-	}
-	if v < maxI {
-		return maxO
-	}
-
-	return v / (v - minI) * (maxO - minO)
-}

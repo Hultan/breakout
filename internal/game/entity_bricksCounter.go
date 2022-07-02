@@ -18,10 +18,9 @@ var brickCounterColor = color.RGBA{R: 255, G: 255, B: 255, A: 255}
 func newBrickCounter() *brickCounter {
 	return &brickCounter{
 		entity: entity{
-			rectangle:     newRectangle(685, 593, 200, 20),
-			speed:         speed{},
-			collisionType: onCollisionNone,
-			color:         brickCounterColor,
+			rectangle: newRectangle(685, 593, 200, 20),
+			speed:     speed{},
+			color:     brickCounterColor,
 		},
 		needCount: true,
 	}
@@ -41,6 +40,7 @@ func (b *brickCounter) update() {
 }
 
 func (b *brickCounter) collide(e gameObject) {
+	// To implement gameObject interface
 }
 
 func (b *brickCounter) countBricks() int {

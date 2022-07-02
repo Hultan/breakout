@@ -1,6 +1,7 @@
 package game
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/gotk3/gotk3/gdk"
@@ -43,7 +44,6 @@ func (b *BreakOut) Start() {
 }
 
 func (b *BreakOut) mainLoop() {
-
 	for {
 		select {
 		case <-b.ticker.C:
@@ -51,20 +51,15 @@ func (b *BreakOut) mainLoop() {
 				theGame.draw()
 				continue
 			}
+
 			theGame.update()
 			theGame.checkCollision()
 			theGame.draw()
 
-			if theGame.counter.countBricks() == 0 {
-				theGame.level++
-				if theGame.level == len(levels) {
-					// No more levels, quit game
+			if b.isLevelOver() {
+				if b.loadNextLevel() == false {
+					// No more levels, or error, quit game
 					b.quit()
-					return
-				}
-				err := theGame.loadLevel()
-				if err != nil {
-					panic(err)
 				}
 			}
 		case <-b.tickerQuit:
@@ -72,6 +67,24 @@ func (b *BreakOut) mainLoop() {
 			return
 		}
 	}
+}
+
+func (b *BreakOut) isLevelOver() bool {
+	return theGame.counter.countBricks() == 0
+}
+
+func (b *BreakOut) loadNextLevel() bool {
+	theGame.level++
+	if theGame.level == len(levels) {
+		return false
+	}
+	err := theGame.loadLevel()
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+
+	return true
 }
 
 func (b *BreakOut) onKeyPress(_ *gtk.ApplicationWindow, e *gdk.Event) {
@@ -89,8 +102,6 @@ func (b *BreakOut) onKeyPress(_ *gtk.ApplicationWindow, e *gdk.Event) {
 		theGame.keyIsPressed["right"] = true
 	case gdk.KEY_Shift_L, gdk.KEY_Shift_R:
 		theGame.keyIsPressed["shift"] = true
-	case gdk.KEY_space:
-		theGame.ball.startMoving()
 	}
 	theGame.keyIsPressedMutex.Unlock()
 }
@@ -107,42 +118,21 @@ func (b *BreakOut) onKeyRelease(_ *gtk.ApplicationWindow, e *gdk.Event) {
 	case gdk.KEY_d, gdk.KEY_D:
 		theGame.keyIsPressed["d"] = false
 	case gdk.KEY_p, gdk.KEY_P:
-		pauseGame()
+		if theGame.isPaused {
+			theGame.resume()
+		} else {
+			theGame.pause()
+		}
 	case gdk.KEY_Left:
 		theGame.keyIsPressed["left"] = false
 	case gdk.KEY_Right:
 		theGame.keyIsPressed["right"] = false
 	case gdk.KEY_Shift_L, gdk.KEY_Shift_R:
 		theGame.keyIsPressed["shift"] = false
+	case gdk.KEY_space:
+		theGame.ball.startMoving()
 	}
 	theGame.keyIsPressedMutex.Unlock()
-}
-
-func pauseGame() {
-	if theGame.isPaused {
-		// Resume game
-		theGame.isPaused = false
-
-		// Find pause entity
-		pauseIndex := -1
-		for i, e := range nonGameEntities {
-			if e == theGame.pause {
-				pauseIndex = i
-				break
-			}
-		}
-
-		// Remove pause entity
-		if pauseIndex > 0 {
-			nonGameEntities[pauseIndex] = nonGameEntities[len(nonGameEntities)-1]
-			nonGameEntities = nonGameEntities[:len(nonGameEntities)-1]
-		}
-	} else {
-		// Pause game
-		theGame.isPaused = true
-		theGame.pause = newPause()
-		nonGameEntities = append(nonGameEntities, theGame.pause)
-	}
 }
 
 func (b *BreakOut) quit() {

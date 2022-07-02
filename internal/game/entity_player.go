@@ -22,10 +22,9 @@ func newPlayer(name string, w, h float64) *player {
 	return &player{
 		name: name,
 		entity: entity{
-			rectangle:     newRectangle(x, y, playerStartingWidth, playerStartingHeight),
-			speed:         speed{},
-			collisionType: onCollisionBounce,
-			color:         playerColor,
+			rectangle: newRectangle(x, y, playerStartingWidth, playerStartingHeight),
+			speed:     speed{},
+			color:     playerColor,
 		},
 		playerWidth: playerStartingWidth,
 	}
@@ -39,6 +38,7 @@ func (p *player) draw(ctx *cairo.Context) {
 
 func (p *player) update() {
 	turbo := 1.0
+
 	theGame.keyIsPressedMutex.Lock()
 	if theGame.keyIsPressed["shift"] {
 		turbo = 2.0

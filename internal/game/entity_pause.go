@@ -15,10 +15,9 @@ type pause struct {
 func newPause() *pause {
 	return &pause{
 		entity{
-			rectangle:     newRectangle(240, 280, 100, 40),
-			speed:         speed{},
-			collisionType: onCollisionNone,
-			color:         pauseColor,
+			rectangle: newRectangle(240, 280, 100, 40),
+			speed:     speed{},
+			color:     pauseColor,
 		},
 	}
 }

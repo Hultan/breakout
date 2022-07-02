@@ -41,19 +41,8 @@ type speed struct {
 	dx, dy float64
 }
 
-type collisionType int
-
-const (
-	onCollisionNone collisionType = iota
-	onCollisionBounce
-	onCollisionRemove
-	onCollisionExplode
-	onCollisionBallLost
-)
-
 type entity struct {
 	rectangle
 	speed
-	collisionType
 	color color.Color
 }

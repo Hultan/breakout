@@ -21,8 +21,7 @@ type ball struct {
 func newBall() *ball {
 	return &ball{
 		entity{
-			collisionType: onCollisionNone,
-			color:         ballColor,
+			color: ballColor,
 		},
 		false,
 	}
@@ -59,23 +58,27 @@ func (b *ball) update() {
 func (b *ball) collide(e gameObject) {
 	switch o := e.(type) {
 	case *cage:
+		// Ball bounces against a cage wall
 		if o.orientation == orientationHorizontal {
 			b.speed.dy = -b.speed.dy
 		} else {
 			b.speed.dx = -b.speed.dx
 		}
 	case *player:
-		// cos(theta) = adjacent/hypotenuse
+		// Ball bounces against the player
 
 		// Calculate the distance from the center of the paddle
 		d := (o.x + o.w/2 - b.x) / o.w
 		b.speed.dx = b.speed.dx - d*6
 		b.speed.dy = -b.speed.dy
 	case *cageBottom:
+		// Player missed the ball, end of ball
+
 		// end of game, for now
 		// b.resetBallPosition()
 		b.speed.dy = -b.speed.dy
 	case *brick:
+		// Ball bounces against a brick
 		b.speed.dy = -b.speed.dy
 	}
 }

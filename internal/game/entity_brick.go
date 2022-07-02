@@ -13,21 +13,16 @@ type brick struct {
 }
 
 var brickColors = []color.RGBA{
-	{R: 0, G: 0, B: 0, A: 0},
 	{R: 0, G: 50, B: 0, A: 255},
 	{R: 0, G: 100, B: 0, A: 255},
 	{R: 0, G: 150, B: 0, A: 255},
 }
 
 func newBrick(col, size int, x, y float64) *brick {
-	if col == 0 {
-		return nil
-	}
-
 	return &brick{
 		entity: entity{
 			rectangle: newRectangle(x, y, float64(size)*brickWidth, 15),
-			color:     brickColors[col],
+			color:     brickColors[col-1],
 		},
 		points: col * 10,
 	}
@@ -49,5 +44,5 @@ func (b *brick) update() {
 func (b *brick) collide(e gameObject) {
 	theGame.counter.needCount = true
 	b.dead = true
-	theGame.score.addScore(b.points)
+	theGame.scorer.addScore(b.points)
 }
