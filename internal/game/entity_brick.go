@@ -39,4 +39,5 @@ func (b *brick) update() {
 }
 
 func (b *brick) collide(e gameObject) {
+	theGame.score.addScore(100)
 }

@@ -12,6 +12,7 @@ import (
 
 var backgroundColor = color.RGBA{R: 128, G: 128, B: 128, A: 255}
 var entities []gameObject
+var nonGameEntities []gameObject
 
 const (
 	brickWidth  = 30.0
@@ -24,6 +25,7 @@ type game struct {
 	keyIsPressedMutex sync.RWMutex
 	player            *player
 	ball              *ball
+	score             *score
 	width, height     float64
 }
 
@@ -33,6 +35,7 @@ func newGame(da *gtk.DrawingArea, name string, w, h float64) *game {
 		keyIsPressed: make(map[string]bool, 5),
 		ball:         newBall(w, h),
 		player:       newPlayer(name, w, h),
+		score:        newScore(newRectangle(15, 593, 200, 20), scoreColor),
 		width:        w,
 		height:       h,
 	}
@@ -47,6 +50,9 @@ func newGame(da *gtk.DrawingArea, name string, w, h float64) *game {
 	entities = append(entities, newCage(w-10, 0, w, h, orientationVertical)) // right cage
 	entities = append(entities, newCageBottom(0, h-10, w, h))                // bottom cage
 	entities = append(entities, g.ball)
+
+	// Non game entities, score etc
+	nonGameEntities = append(nonGameEntities, g.score)
 
 	err := g.loadLevel(1)
 	if err != nil {
@@ -85,6 +91,9 @@ func (g *game) onDraw(_ *gtk.DrawingArea, ctx *cairo.Context) {
 	g.drawBackground(ctx, backgroundColor)
 	for i := range entities {
 		entities[i].draw(ctx)
+	}
+	for i := range nonGameEntities {
+		nonGameEntities[i].draw(ctx)
 	}
 }
 
