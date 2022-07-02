@@ -1,8 +1,6 @@
 package game
 
 import (
-	"fmt"
-
 	"github.com/gotk3/gotk3/cairo"
 )
 
@@ -31,5 +29,4 @@ func (c *cageBottom) update() {
 }
 
 func (c *cageBottom) collide(e gameObject) {
-	fmt.Println("Game over!")
 }

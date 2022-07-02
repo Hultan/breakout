@@ -58,7 +58,8 @@ func (b *ball) collide(e gameObject) {
 		b.speed.dy = -b.speed.dy
 	case *cageBottom:
 		// end of game, for now
-		b.resetBallPosition()
+		// b.resetBallPosition()
+		b.speed.dy = -b.speed.dy
 	case *brick:
 		b.speed.dy = -b.speed.dy
 		o.dead = true

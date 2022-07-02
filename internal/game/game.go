@@ -46,7 +46,10 @@ func newGame(da *gtk.DrawingArea, name string, w, h float64) *game {
 	entities = append(entities, newCageBottom(0, h-10, w, h))                // bottom cage
 	entities = append(entities, g.ball)
 
-	g.loadLevel(1)
+	err := g.loadLevel(1)
+	if err != nil {
+		panic(err)
+	}
 
 	return g
 }
@@ -89,7 +92,7 @@ func (g *game) drawBackground(ctx *cairo.Context, color color.Color) {
 	ctx.Fill()
 }
 
-func (g *game) loadLevel(level int) {
+func (g *game) loadLevel(level int) error {
 	h := levelHeight
 	for _, row := range levels[level].bricks {
 		w := 50.0
@@ -97,11 +100,12 @@ func (g *game) loadLevel(level int) {
 		for _, s := range fields {
 			col, err := strconv.Atoi(string(s[0]))
 			if err != nil {
-				panic(err)
+				return levelError{level, "unknown level"}
 			}
 			entities = append(entities, newBrick(col-1, len(s), w, h))
 			w += float64(len(s))*brickWidth + brickWidth
 		}
 		h += levelHeight
 	}
+	return nil
 }

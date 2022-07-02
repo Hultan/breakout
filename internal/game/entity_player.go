@@ -1,7 +1,6 @@
 package game
 
 import (
-	"fmt"
 	"image/color"
 
 	"github.com/gotk3/gotk3/cairo"
@@ -57,5 +56,4 @@ func (p *player) update() {
 }
 
 func (p *player) collide(e gameObject) {
-	fmt.Println("Collision with player")
 }

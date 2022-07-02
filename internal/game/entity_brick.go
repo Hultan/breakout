@@ -1,7 +1,6 @@
 package game
 
 import (
-	"fmt"
 	"image/color"
 
 	"github.com/gotk3/gotk3/cairo"
@@ -40,5 +39,4 @@ func (b *brick) update() {
 }
 
 func (b *brick) collide(e gameObject) {
-	fmt.Println("Collision with brick")
 }

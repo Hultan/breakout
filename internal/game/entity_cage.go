@@ -1,7 +1,6 @@
 package game
 
 import (
-	"fmt"
 	"image/color"
 
 	"github.com/gotk3/gotk3/cairo"
@@ -42,5 +41,4 @@ func (c *cage) update() {
 }
 
 func (c *cage) collide(e gameObject) {
-	fmt.Println("Collision with cage")
 }
