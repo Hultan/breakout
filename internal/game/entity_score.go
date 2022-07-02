@@ -36,9 +36,11 @@ func (s *score) draw(ctx *cairo.Context) {
 }
 
 func (s *score) update() {
+	// To implement gameObject interface
 }
 
 func (s *score) collide(e gameObject) {
+	// To implement gameObject interface
 }
 
 func (s *score) addScore(points int) {

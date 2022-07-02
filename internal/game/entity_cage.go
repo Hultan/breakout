@@ -38,7 +38,9 @@ func (c *cage) draw(ctx *cairo.Context) {
 }
 
 func (c *cage) update() {
+	// To implement gameObject interface
 }
 
 func (c *cage) collide(e gameObject) {
+	// To implement gameObject interface
 }

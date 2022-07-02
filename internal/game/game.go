@@ -37,7 +37,7 @@ func newGame(da *gtk.DrawingArea, name string, w, h float64) *game {
 	g := &game{
 		da:           da,
 		keyIsPressed: make(map[string]bool, 5),
-		ball:         newBall(w, h),
+		ball:         newBall(),
 		player:       newPlayer(name, w, h),
 		score:        newScore(),
 		counter:      newBrickCounter(),

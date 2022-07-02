@@ -55,8 +55,13 @@ func (b *BreakOut) mainLoop() {
 			theGame.checkCollision()
 			theGame.draw()
 
-			if theGame.counter.count() == 0 {
+			if theGame.counter.countBricks() == 0 {
 				theGame.level++
+				if theGame.level == len(levels) {
+					// No more levels, quit game
+					b.quit()
+					return
+				}
 				err := theGame.loadLevel()
 				if err != nil {
 					panic(err)
@@ -74,9 +79,6 @@ func (b *BreakOut) onKeyPress(_ *gtk.ApplicationWindow, e *gdk.Event) {
 
 	theGame.keyIsPressedMutex.Lock()
 	switch ke.KeyVal() {
-	case gdk.KEY_q, gdk.KEY_Q:
-		b.quit()
-		b.win.Close()
 	case gdk.KEY_a, gdk.KEY_A:
 		theGame.keyIsPressed["a"] = true
 	case gdk.KEY_d, gdk.KEY_D:
@@ -100,7 +102,6 @@ func (b *BreakOut) onKeyRelease(_ *gtk.ApplicationWindow, e *gdk.Event) {
 	switch ke.KeyVal() {
 	case gdk.KEY_q, gdk.KEY_Q:
 		b.quit()
-		b.win.Close()
 	case gdk.KEY_a, gdk.KEY_A:
 		theGame.keyIsPressed["a"] = false
 	case gdk.KEY_d, gdk.KEY_D:
@@ -146,4 +147,5 @@ func pauseGame() {
 
 func (b *BreakOut) quit() {
 	close(b.tickerQuit) // Stop ticker
+	b.win.Close()
 }

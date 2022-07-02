@@ -43,9 +43,11 @@ func (b *brick) draw(ctx *cairo.Context) {
 }
 
 func (b *brick) update() {
+	// To implement gameObject interface
 }
 
 func (b *brick) collide(e gameObject) {
+	theGame.counter.needCount = true
 	b.dead = true
 	theGame.score.addScore(b.points)
 }

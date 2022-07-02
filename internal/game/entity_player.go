@@ -63,4 +63,5 @@ func (p *player) update() {
 }
 
 func (p *player) collide(e gameObject) {
+	// To implement gameObject interface
 }

@@ -33,7 +33,9 @@ func (s *pause) draw(ctx *cairo.Context) {
 }
 
 func (s *pause) update() {
+	// To implement gameObject interface
 }
 
 func (s *pause) collide(e gameObject) {
+	// To implement gameObject interface
 }

@@ -9,8 +9,8 @@ import (
 
 type brickCounter struct {
 	entity
-	needCount  bool
-	brickCount int
+	needCount bool
+	count     int
 }
 
 var brickCounterColor = color.RGBA{R: 255, G: 255, B: 255, A: 255}
@@ -32,19 +32,20 @@ func (b *brickCounter) draw(ctx *cairo.Context) {
 	ctx.SelectFontFace("Roboto Thin", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
 	ctx.SetFontSize(b.h)
 	ctx.MoveTo(b.x, b.y)
-	text := fmt.Sprintf("Bricks : %d", b.count())
+	text := fmt.Sprintf("Bricks : %d", b.countBricks())
 	ctx.ShowText(text)
 }
 
 func (b *brickCounter) update() {
+	// To implement gameObject interface
 }
 
 func (b *brickCounter) collide(e gameObject) {
 }
 
-func (b *brickCounter) count() int {
+func (b *brickCounter) countBricks() int {
 	if !b.needCount {
-		return b.brickCount
+		return b.count
 	}
 
 	count := 0
@@ -55,7 +56,7 @@ func (b *brickCounter) count() int {
 		}
 	}
 
-	b.brickCount = count
+	b.count = count
 	b.needCount = false
 	return count
 }

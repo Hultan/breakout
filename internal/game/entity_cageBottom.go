@@ -18,15 +18,13 @@ func newCageBottom(x, y, w, h float64) *cageBottom {
 }
 
 func (c *cageBottom) draw(ctx *cairo.Context) {
-	// Does not need to be drawn
-
-	// ctx.SetSourceRGBA(getColor(color.Black))
-	// ctx.Rectangle(c.rect())
-	// ctx.Fill()
+	// To implement gameObject interface
 }
 
 func (c *cageBottom) update() {
+	// To implement gameObject interface
 }
 
 func (c *cageBottom) collide(e gameObject) {
+	// To implement gameObject interface
 }
