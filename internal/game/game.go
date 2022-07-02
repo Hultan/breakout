@@ -109,11 +109,14 @@ func (g *game) loadLevel(level int) error {
 		w := 50.0
 		fields := strings.Fields(row)
 		for _, s := range fields {
-			col, err := strconv.Atoi(string(s[0]))
+			color, err := strconv.Atoi(string(s[0]))
 			if err != nil {
 				return levelError{level, "unknown level"}
 			}
-			entities = append(entities, newBrick(col-1, len(s), w, h))
+			b := newBrick(color, len(s), w, h)
+			if b != nil {
+				entities = append(entities, b)
+			}
 			w += float64(len(s))*brickWidth + brickWidth
 		}
 		h += levelHeight

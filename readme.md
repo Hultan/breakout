@@ -2,7 +2,7 @@
 The Breakout game in Go and GTK, inspired by Tsoding Daily.
 
 ## TODO
-* Position ball at player paddle, start at mouse click
+* ~~Position ball at player paddle, start at mouse click~~
 * Pause functionality
 * Score functionality
     * Have a countdown timer, from 1000 to 1, score will be timer at collide?

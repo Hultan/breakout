@@ -8,21 +8,28 @@ import (
 
 type brick struct {
 	entity
-	dead bool
+	points int
+	dead   bool
 }
 
 var brickColors = []color.RGBA{
+	{R: 0, G: 0, B: 0, A: 0},
 	{R: 0, G: 50, B: 0, A: 255},
 	{R: 0, G: 100, B: 0, A: 255},
 	{R: 0, G: 150, B: 0, A: 255},
 }
 
 func newBrick(col, size int, x, y float64) *brick {
+	if col == 0 {
+		return nil
+	}
+
 	return &brick{
 		entity: entity{
-			rectangle: newRectangle(x, y, float64(size)*brickWidth, 20),
+			rectangle: newRectangle(x, y, float64(size)*brickWidth, 15),
 			color:     brickColors[col],
 		},
+		points: col * 100,
 	}
 }
 
@@ -39,5 +46,5 @@ func (b *brick) update() {
 }
 
 func (b *brick) collide(e gameObject) {
-	theGame.score.addScore(100)
+	theGame.score.addScore(b.points)
 }

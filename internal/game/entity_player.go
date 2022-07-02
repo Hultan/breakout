@@ -41,15 +41,15 @@ func (p *player) update() {
 	turbo := 1.0
 	theGame.keyIsPressedMutex.Lock()
 	if theGame.keyIsPressed["shift"] {
-		turbo = 1.8
+		turbo = 2.0
 	}
 	if theGame.keyIsPressed["a"] || theGame.keyIsPressed["left"] {
-		p.x -= 6 * turbo
+		p.x -= 5 * turbo
 		if p.x < 10 {
 			p.x = 10
 		}
 	} else if theGame.keyIsPressed["d"] || theGame.keyIsPressed["right"] {
-		p.x += 6 * turbo
+		p.x += 5 * turbo
 		if p.x > theGame.width-p.playerWidth-10 {
 			p.x = theGame.width - p.playerWidth - 10
 		}
