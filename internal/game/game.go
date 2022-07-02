@@ -4,6 +4,7 @@ import (
 	"image/color"
 	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/gotk3/gotk3/cairo"
 	"github.com/gotk3/gotk3/gtk"
@@ -18,21 +19,22 @@ const (
 )
 
 type game struct {
-	da            *gtk.DrawingArea
-	keysPressed   map[string]bool
-	player        *player
-	ball          *ball
-	width, height float64
+	da                *gtk.DrawingArea
+	keyIsPressed      map[string]bool
+	keyIsPressedMutex sync.RWMutex
+	player            *player
+	ball              *ball
+	width, height     float64
 }
 
 func newGame(da *gtk.DrawingArea, name string, w, h float64) *game {
 	g := &game{
-		da:          da,
-		keysPressed: make(map[string]bool, 5),
-		ball:        newBall(w, h),
-		player:      newPlayer(name, w, h),
-		width:       w,
-		height:      h,
+		da:           da,
+		keyIsPressed: make(map[string]bool, 5),
+		ball:         newBall(w, h),
+		player:       newPlayer(name, w, h),
+		width:        w,
+		height:       h,
 	}
 
 	// Events

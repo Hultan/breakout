@@ -15,6 +15,7 @@ var ballColor = color.RGBA{R: 255, G: 255, B: 255, A: 255}
 
 type ball struct {
 	entity
+	isMoving bool
 }
 
 func newBall(w, h float64) *ball {
@@ -23,12 +24,26 @@ func newBall(w, h float64) *ball {
 			collisionType: onCollisionNone,
 			color:         ballColor,
 		},
+		false,
 	}
 }
 
 func (b *ball) resetBallPosition() {
-	b.rectangle = newRectangle(theGame.width/2, theGame.height*1/3, ballSize, ballSize)
-	b.speed = speed{ballStartingSpeedX, ballStartingSpeedY}
+	b.rectangle = newRectangle(
+		theGame.player.x+theGame.player.playerWidth/2,
+		theGame.player.y-ballSize,
+		ballSize,
+		ballSize,
+	)
+	b.isMoving = false
+	b.dx, b.dy = 0.0, 0.0
+}
+
+func (b *ball) startMoving() {
+	if !b.isMoving {
+		b.isMoving = true
+		b.speed = speed{ballStartingSpeedX, ballStartingSpeedY}
+	}
 }
 
 func (b *ball) draw(ctx *cairo.Context) {
@@ -58,8 +73,8 @@ func (b *ball) collide(e gameObject) {
 		b.speed.dy = -b.speed.dy
 	case *cageBottom:
 		// end of game, for now
-		// b.resetBallPosition()
-		b.speed.dy = -b.speed.dy
+		b.resetBallPosition()
+		// b.speed.dy = -b.speed.dy
 	case *brick:
 		b.speed.dy = -b.speed.dy
 		o.dead = true

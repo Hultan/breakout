@@ -39,19 +39,26 @@ func (p *player) draw(ctx *cairo.Context) {
 
 func (p *player) update() {
 	turbo := 1.0
-	if theGame.keysPressed["shift"] {
+	theGame.keyIsPressedMutex.Lock()
+	if theGame.keyIsPressed["shift"] {
 		turbo = 1.8
 	}
-	if theGame.keysPressed["a"] || theGame.keysPressed["left"] {
+	if theGame.keyIsPressed["a"] || theGame.keyIsPressed["left"] {
 		p.x -= 6 * turbo
 		if p.x < 10 {
 			p.x = 10
 		}
-	} else if theGame.keysPressed["d"] || theGame.keysPressed["right"] {
+	} else if theGame.keyIsPressed["d"] || theGame.keyIsPressed["right"] {
 		p.x += 6 * turbo
 		if p.x > theGame.width-p.playerWidth-10 {
 			p.x = theGame.width - p.playerWidth - 10
 		}
+	}
+	theGame.keyIsPressedMutex.Unlock()
+
+	// If the ball is not moving, let it follow the player
+	if !theGame.ball.isMoving {
+		theGame.ball.x = p.x + p.playerWidth/2
 	}
 }
 

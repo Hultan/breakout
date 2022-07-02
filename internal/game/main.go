@@ -59,41 +59,47 @@ func (b *BreakOut) mainLoop() {
 func (b *BreakOut) onKeyPress(_ *gtk.ApplicationWindow, e *gdk.Event) {
 	ke := gdk.EventKeyNewFromEvent(e)
 
+	theGame.keyIsPressedMutex.Lock()
 	switch ke.KeyVal() {
 	case gdk.KEY_q, gdk.KEY_Q:
 		b.quit()
 		b.win.Close()
 	case gdk.KEY_a, gdk.KEY_A:
-		theGame.keysPressed["a"] = true
+		theGame.keyIsPressed["a"] = true
 	case gdk.KEY_d, gdk.KEY_D:
-		theGame.keysPressed["d"] = true
+		theGame.keyIsPressed["d"] = true
 	case gdk.KEY_Left:
-		theGame.keysPressed["left"] = true
+		theGame.keyIsPressed["left"] = true
 	case gdk.KEY_Right:
-		theGame.keysPressed["right"] = true
+		theGame.keyIsPressed["right"] = true
 	case gdk.KEY_Shift_L, gdk.KEY_Shift_R:
-		theGame.keysPressed["shift"] = true
+		theGame.keyIsPressed["shift"] = true
+	case gdk.KEY_space:
+		theGame.ball.startMoving()
 	}
+	theGame.keyIsPressedMutex.Unlock()
 }
 
 func (b *BreakOut) onKeyRelease(_ *gtk.ApplicationWindow, e *gdk.Event) {
 	ke := gdk.EventKeyNewFromEvent(e)
 
+	theGame.keyIsPressedMutex.Lock()
 	switch ke.KeyVal() {
 	case gdk.KEY_q, gdk.KEY_Q:
 		b.quit()
 		b.win.Close()
 	case gdk.KEY_a, gdk.KEY_A:
-		theGame.keysPressed["a"] = false
+		theGame.keyIsPressed["a"] = false
 	case gdk.KEY_d, gdk.KEY_D:
-		theGame.keysPressed["d"] = false
+		theGame.keyIsPressed["d"] = false
 	case gdk.KEY_Left:
-		theGame.keysPressed["left"] = false
+		theGame.keyIsPressed["left"] = false
 	case gdk.KEY_Right:
-		theGame.keysPressed["right"] = false
+		theGame.keyIsPressed["right"] = false
 	case gdk.KEY_Shift_L, gdk.KEY_Shift_R:
-		theGame.keysPressed["shift"] = false
+		theGame.keyIsPressed["shift"] = false
 	}
+	theGame.keyIsPressedMutex.Unlock()
 }
 
 func (b *BreakOut) quit() {
