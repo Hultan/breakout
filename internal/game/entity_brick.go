@@ -29,7 +29,7 @@ func newBrick(col, size int, x, y float64) *brick {
 			rectangle: newRectangle(x, y, float64(size)*brickWidth, 15),
 			color:     brickColors[col],
 		},
-		points: col * 100,
+		points: col * 10,
 	}
 }
 

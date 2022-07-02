@@ -7,9 +7,9 @@ import (
 )
 
 const playerStartingWidth = 100.0
-const playerStartingHeight = 20.0
+const playerStartingHeight = 15.0
 
-var playerColor = color.RGBA{R: 50, G: 0, B: 0, A: 255}
+var playerColor = color.RGBA{R: 200, G: 0, B: 0, A: 255}
 
 type player struct {
 	name string

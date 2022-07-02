@@ -10,13 +10,13 @@ import (
 	"github.com/gotk3/gotk3/gtk"
 )
 
-var backgroundColor = color.RGBA{R: 128, G: 128, B: 128, A: 255}
+var backgroundColor = color.RGBA{R: 28, G: 28, B: 28, A: 200}
 var entities []gameObject
 var nonGameEntities []gameObject
 
 const (
-	brickWidth  = 30.0
-	levelHeight = 40.0
+	brickWidth  = 20.0
+	levelHeight = 30.0
 )
 
 type game struct {
@@ -28,6 +28,7 @@ type game struct {
 	score             *score
 	pause             *pause
 	width, height     float64
+	level             int
 	isPaused          bool
 }
 
@@ -57,7 +58,7 @@ func newGame(da *gtk.DrawingArea, name string, w, h float64) *game {
 	// Non game entities, score etc
 	nonGameEntities = append(nonGameEntities, g.score)
 
-	err := g.loadLevel(1)
+	err := g.loadLevel(g.level)
 	if err != nil {
 		panic(err)
 	}
@@ -112,12 +113,12 @@ func (g *game) loadLevel(level int) error {
 		w := 50.0
 		fields := strings.Fields(row)
 		for _, s := range fields {
-			color, err := strconv.Atoi(string(s[0]))
+			brickType, err := strconv.Atoi(string(s[0]))
 			if err != nil {
 				return levelError{level, "unknown level"}
 			}
-			b := newBrick(color, len(s), w, h)
-			if b != nil {
+			if brickType > 0 {
+				b := newBrick(brickType, len(s), w, h)
 				entities = append(entities, b)
 			}
 			w += float64(len(s))*brickWidth + brickWidth
