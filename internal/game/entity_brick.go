@@ -46,5 +46,6 @@ func (b *brick) update() {
 }
 
 func (b *brick) collide(e gameObject) {
+	b.dead = true
 	theGame.score.addScore(b.points)
 }

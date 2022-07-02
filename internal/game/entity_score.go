@@ -17,7 +17,7 @@ type score struct {
 func newScore() *score {
 	return &score{
 		entity{
-			rectangle:     newRectangle(15, 593, 200, 20),
+			rectangle:     newRectangle(20, 593, 200, 20),
 			speed:         speed{},
 			collisionType: onCollisionNone,
 			color:         scoreColor,

@@ -76,8 +76,8 @@ func (b *ball) collide(e gameObject) {
 		// b.resetBallPosition()
 		b.speed.dy = -b.speed.dy
 	case *brick:
+		theGame.counter.needCount = true
 		b.speed.dy = -b.speed.dy
-		o.dead = true
 	}
 }
 

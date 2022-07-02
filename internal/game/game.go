@@ -27,6 +27,7 @@ type game struct {
 	ball              *ball
 	score             *score
 	pause             *pause
+	counter           *brickCounter
 	width, height     float64
 	level             int
 	isPaused          bool
@@ -39,7 +40,7 @@ func newGame(da *gtk.DrawingArea, name string, w, h float64) *game {
 		ball:         newBall(w, h),
 		player:       newPlayer(name, w, h),
 		score:        newScore(),
-		pause:        nil,
+		counter:      newBrickCounter(),
 		width:        w,
 		height:       h,
 	}
@@ -57,16 +58,13 @@ func newGame(da *gtk.DrawingArea, name string, w, h float64) *game {
 
 	// Non game entities, score etc
 	nonGameEntities = append(nonGameEntities, g.score)
-
-	err := g.loadLevel(g.level)
-	if err != nil {
-		panic(err)
-	}
+	nonGameEntities = append(nonGameEntities, g.counter)
 
 	return g
 }
 
 func (g *game) initialize() {
+	g.loadLevel()
 	g.ball.resetBallPosition()
 }
 
@@ -84,6 +82,7 @@ func (g *game) checkCollision() {
 			e.collide(g.ball)
 		}
 	}
+
 }
 
 func (g *game) draw() {
@@ -107,15 +106,15 @@ func (g *game) drawBackground(ctx *cairo.Context, color color.Color) {
 	ctx.Fill()
 }
 
-func (g *game) loadLevel(level int) error {
+func (g *game) loadLevel() error {
 	h := levelHeight
-	for _, row := range levels[level].bricks {
+	for _, row := range levels[theGame.level].bricks {
 		w := 50.0
 		fields := strings.Fields(row)
 		for _, s := range fields {
 			brickType, err := strconv.Atoi(string(s[0]))
 			if err != nil {
-				return levelError{level, "unknown level"}
+				return levelError{theGame.level, "unknown level"}
 			}
 			if brickType > 0 {
 				b := newBrick(brickType, len(s), w, h)

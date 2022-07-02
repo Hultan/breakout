@@ -43,6 +43,7 @@ func (b *BreakOut) Start() {
 }
 
 func (b *BreakOut) mainLoop() {
+
 	for {
 		select {
 		case <-b.ticker.C:
@@ -53,6 +54,14 @@ func (b *BreakOut) mainLoop() {
 			theGame.update()
 			theGame.checkCollision()
 			theGame.draw()
+
+			if theGame.counter.count() == 0 {
+				theGame.level++
+				err := theGame.loadLevel()
+				if err != nil {
+					panic(err)
+				}
+			}
 		case <-b.tickerQuit:
 			b.ticker.Stop()
 			return
