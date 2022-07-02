@@ -49,7 +49,7 @@ func (b *brickCounter) countBricks() int {
 	}
 
 	count := 0
-	for _, object := range entities {
+	for _, object := range theGame.entities {
 		br, ok := object.(*brick)
 		if ok && !br.dead {
 			count++

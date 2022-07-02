@@ -11,8 +11,6 @@ import (
 )
 
 var backgroundColor = color.RGBA{R: 28, G: 28, B: 28, A: 200}
-var entities []gameObject
-var nonGameEntities []gameObject
 
 const (
 	brickWidth  = 20.0
@@ -28,6 +26,8 @@ type game struct {
 	scorer            *score
 	pauser            *pause
 	counter           *brickCounter
+	entities          entityCollection
+	nonGameEntities   entityCollection
 	width, height     float64
 	level             int
 	isPaused          bool
@@ -35,30 +35,32 @@ type game struct {
 
 func newGame(da *gtk.DrawingArea, name string, w, h float64) *game {
 	g := &game{
-		da:           da,
-		keyIsPressed: make(map[string]bool, 5),
-		ball:         newBall(),
-		player:       newPlayer(name, w, h),
-		scorer:       newScore(),
-		counter:      newBrickCounter(),
-		width:        w,
-		height:       h,
+		da:              da,
+		keyIsPressed:    make(map[string]bool, 5),
+		ball:            newBall(),
+		player:          newPlayer(name, w, h),
+		scorer:          newScore(),
+		counter:         newBrickCounter(),
+		entities:        newEntityCollection(),
+		nonGameEntities: newEntityCollection(),
+		width:           w,
+		height:          h,
 	}
 
 	// Events
 	g.da.Connect("draw", g.onDraw)
 
 	// Entities
-	entities = append(entities, g.player)
-	entities = append(entities, newCage(0, 0, 10, h, orientationVertical))   // left cage
-	entities = append(entities, newCage(0, 0, w, 10, orientationHorizontal)) // top cage
-	entities = append(entities, newCage(w-10, 0, w, h, orientationVertical)) // right cage
-	entities = append(entities, newCageBottom(0, h-10, w, h))                // bottom cage
-	entities = append(entities, g.ball)
+	g.entities.add(g.player)
+	g.entities.add(newCage(0, 0, 10, h, orientationVertical))   // left cage
+	g.entities.add(newCage(0, 0, w, 10, orientationHorizontal)) // top cage
+	g.entities.add(newCage(w-10, 0, w, h, orientationVertical)) // right cage
+	g.entities.add(newCageBottom(0, h-10, w, h))                // bottom cage
+	g.entities.add(g.ball)
 
 	// Non game entities, score etc
-	nonGameEntities = append(nonGameEntities, g.scorer)
-	nonGameEntities = append(nonGameEntities, g.counter)
+	g.nonGameEntities.add(g.scorer)
+	g.nonGameEntities.add(g.counter)
 
 	return g
 }
@@ -69,14 +71,14 @@ func (g *game) initialize() {
 }
 
 func (g *game) update() {
-	for i := range entities {
-		entities[i].update()
+	for i := range g.entities {
+		g.entities[i].update()
 	}
 }
 
 func (g *game) checkCollision() {
-	for i := range entities {
-		e := entities[i]
+	for i := range g.entities {
+		e := g.entities[i]
 		if g.ball.collidesWith(e) {
 			g.ball.collide(e)
 			e.collide(g.ball)
@@ -93,12 +95,12 @@ func (g *game) draw() {
 func (g *game) onDraw(_ *gtk.DrawingArea, ctx *cairo.Context) {
 	g.drawBackground(ctx)
 	// Draw game entities
-	for i := range entities {
-		entities[i].draw(ctx)
+	for i := range g.entities {
+		g.entities[i].draw(ctx)
 	}
 	// Draw non-game entities (like texts, etc)
-	for i := range nonGameEntities {
-		nonGameEntities[i].draw(ctx)
+	for i := range g.nonGameEntities {
+		g.nonGameEntities[i].draw(ctx)
 	}
 }
 
@@ -120,7 +122,7 @@ func (g *game) loadLevel() error {
 			}
 			if brickType > 0 {
 				b := newBrick(brickType, len(s), w, h)
-				entities = append(entities, b)
+				g.entities.add(b)
 			}
 			w += float64(len(s))*brickWidth + brickWidth
 		}
@@ -133,7 +135,7 @@ func (g *game) pause() {
 	// Pause game
 	g.isPaused = true
 	g.pauser = newPause()
-	nonGameEntities = append(nonGameEntities, g.pauser)
+	g.nonGameEntities.add(g.pauser)
 }
 
 func (g *game) resume() {
@@ -142,7 +144,7 @@ func (g *game) resume() {
 
 	// Find pause entity
 	pauseIndex := -1
-	for i, e := range nonGameEntities {
+	for i, e := range g.nonGameEntities {
 		if e == g.pauser {
 			pauseIndex = i
 			break
@@ -151,7 +153,7 @@ func (g *game) resume() {
 
 	// Remove pause entity
 	if pauseIndex > 0 {
-		nonGameEntities[pauseIndex] = nonGameEntities[len(nonGameEntities)-1]
-		nonGameEntities = nonGameEntities[:len(nonGameEntities)-1]
+		g.nonGameEntities[pauseIndex] = g.nonGameEntities[len(g.nonGameEntities)-1]
+		g.nonGameEntities = g.nonGameEntities[:len(g.nonGameEntities)-1]
 	}
 }
