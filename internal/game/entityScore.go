@@ -2,12 +2,9 @@ package game
 
 import (
 	"fmt"
-	"image/color"
 
 	"github.com/gotk3/gotk3/cairo"
 )
-
-var scoreColor = color.RGBA{R: 255, G: 255, B: 255, A: 255}
 
 type score struct {
 	entity
@@ -16,12 +13,10 @@ type score struct {
 
 func newScore() *score {
 	return &score{
-		entity{
-			rectangle: newRectangle(20, 593, 200, 20),
-			speed:     speed{},
+		entity: entity{
+			rectangle: newRectangle(scoreLeft, scoreTop, scoreWidth, scoreHeight),
 			color:     scoreColor,
 		},
-		0,
 	}
 }
 

@@ -1,20 +1,12 @@
 package game
 
 import (
-	"image/color"
 	"strconv"
 	"strings"
 	"sync"
 
 	"github.com/gotk3/gotk3/cairo"
 	"github.com/gotk3/gotk3/gtk"
-)
-
-var backgroundColor = color.RGBA{R: 28, G: 28, B: 28, A: 200}
-
-const (
-	brickWidth  = 20.0
-	levelHeight = 30.0
 )
 
 type game struct {
@@ -28,9 +20,9 @@ type game struct {
 	counter           *brickCounter
 	entities          entityCollection
 	nonGameEntities   entityCollection
-	width, height     float64
-	level             int
-	isPaused          bool
+	size
+	level    int
+	isPaused bool
 }
 
 func newGame(da *gtk.DrawingArea, name string, w, h float64) *game {
@@ -43,8 +35,7 @@ func newGame(da *gtk.DrawingArea, name string, w, h float64) *game {
 		counter:         newBrickCounter(),
 		entities:        newEntityCollection(),
 		nonGameEntities: newEntityCollection(),
-		width:           w,
-		height:          h,
+		size:            newSize(w, h),
 	}
 
 	// Events
@@ -52,13 +43,13 @@ func newGame(da *gtk.DrawingArea, name string, w, h float64) *game {
 
 	// Entities
 	g.entities.add(g.player)
-	g.entities.add(newCage(0, 0, 10, h, orientationVertical))   // left cage
-	g.entities.add(newCage(0, 0, w, 10, orientationHorizontal)) // top cage
-	g.entities.add(newCage(w-10, 0, w, h, orientationVertical)) // right cage
-	g.entities.add(newCageBottom(0, h-10, w, h))                // bottom cage
+	g.entities.add(newCage(0, 0, cageWidth, h, orientationVertical))   // left cage
+	g.entities.add(newCage(0, 0, w, cageWidth, orientationHorizontal)) // top cage
+	g.entities.add(newCage(w-cageWidth, 0, w, h, orientationVertical)) // right cage
+	g.entities.add(newCageBottom(0, h-cageWidth, w, h))                // bottom cage
 	g.entities.add(g.ball)
 
-	// Non game entities, score etc
+	// Non game entities, score & pause text etc
 	g.nonGameEntities.add(g.scorer)
 	g.nonGameEntities.add(g.counter)
 
@@ -106,14 +97,14 @@ func (g *game) onDraw(_ *gtk.DrawingArea, ctx *cairo.Context) {
 
 func (g *game) drawBackground(ctx *cairo.Context) {
 	ctx.SetSourceRGBA(getColor(backgroundColor))
-	ctx.Rectangle(0, 0, g.width, g.height)
+	ctx.Rectangle(0, 0, g.w, g.h)
 	ctx.Fill()
 }
 
 func (g *game) loadLevel() error {
 	h := levelHeight
 	for _, row := range levels[g.level].bricks {
-		w := 50.0
+		w := brickLeftMargin
 		fields := strings.Fields(row)
 		for _, s := range fields {
 			brickType, err := strconv.Atoi(string(s[0]))

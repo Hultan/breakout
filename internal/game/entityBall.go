@@ -1,17 +1,10 @@
 package game
 
 import (
-	"image/color"
 	"math"
 
 	"github.com/gotk3/gotk3/cairo"
 )
-
-const ballSize = 10
-const ballStartingSpeedX = 0
-const ballStartingSpeedY = 7
-
-var ballColor = color.RGBA{R: 255, G: 255, B: 255, A: 255}
 
 type ball struct {
 	entity
@@ -69,7 +62,7 @@ func (b *ball) collide(e gameObject) {
 
 		// Calculate the distance from the center of the paddle
 		d := (o.x + o.w/2 - b.x) / o.w
-		b.speed.dx = b.speed.dx - d*6
+		b.speed.dx = b.speed.dx - d*playerBounce
 		b.speed.dy = -b.speed.dy
 	case *cageBottom:
 		// Player missed the ball, end of ball

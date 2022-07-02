@@ -1,15 +1,8 @@
 package game
 
 import (
-	"image/color"
-
 	"github.com/gotk3/gotk3/cairo"
 )
-
-const playerStartingWidth = 100.0
-const playerStartingHeight = 15.0
-
-var playerColor = color.RGBA{R: 200, G: 0, B: 0, A: 255}
 
 type player struct {
 	name string
@@ -18,12 +11,11 @@ type player struct {
 }
 
 func newPlayer(name string, w, h float64) *player {
-	x, y := (w-playerStartingWidth)/2, h-50
+	x, y := (w-playerStartingWidth)/2, h-playerBorderOffset
 	return &player{
 		name: name,
 		entity: entity{
 			rectangle: newRectangle(x, y, playerStartingWidth, playerStartingHeight),
-			speed:     speed{},
 			color:     playerColor,
 		},
 		playerWidth: playerStartingWidth,
@@ -41,17 +33,17 @@ func (p *player) update() {
 
 	theGame.keyIsPressedMutex.Lock()
 	if theGame.keyIsPressed["shift"] {
-		turbo = 2.0
+		turbo = playerSpeedTurboMultiplier
 	}
 	if theGame.keyIsPressed["a"] || theGame.keyIsPressed["left"] {
-		p.x -= 5 * turbo
-		if p.x < 10 {
-			p.x = 10
+		p.x -= playerSpeed * turbo
+		if p.x < cageWidth {
+			p.x = cageWidth
 		}
 	} else if theGame.keyIsPressed["d"] || theGame.keyIsPressed["right"] {
-		p.x += 5 * turbo
-		if p.x > theGame.width-p.playerWidth-10 {
-			p.x = theGame.width - p.playerWidth - 10
+		p.x += playerSpeed * turbo
+		if p.x > theGame.w-p.playerWidth-cageWidth {
+			p.x = theGame.w - p.playerWidth - cageWidth
 		}
 	}
 	theGame.keyIsPressedMutex.Unlock()

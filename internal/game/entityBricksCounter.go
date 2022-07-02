@@ -2,7 +2,6 @@ package game
 
 import (
 	"fmt"
-	"image/color"
 
 	"github.com/gotk3/gotk3/cairo"
 )
@@ -13,13 +12,10 @@ type brickCounter struct {
 	count     int
 }
 
-var brickCounterColor = color.RGBA{R: 255, G: 255, B: 255, A: 255}
-
 func newBrickCounter() *brickCounter {
 	return &brickCounter{
 		entity: entity{
-			rectangle: newRectangle(685, 593, 200, 20),
-			speed:     speed{},
+			rectangle: newRectangle(brickCounterTop, brickCounterLeft, brickCounterWidth, brickCounterHeight),
 			color:     brickCounterColor,
 		},
 		needCount: true,

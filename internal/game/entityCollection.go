@@ -3,7 +3,7 @@ package game
 type entityCollection []gameObject
 
 func newEntityCollection() entityCollection {
-	return make(entityCollection, 0, 10)
+	return make(entityCollection, 0, newEntityCollectionSize)
 }
 
 func (e *entityCollection) add(o gameObject) {
@@ -11,9 +11,11 @@ func (e *entityCollection) add(o gameObject) {
 }
 
 func (e *entityCollection) remove(o gameObject) {
+	slice := *e
+
 	// Find pause entity
 	pauseIndex := -1
-	for i, ent := range *e {
+	for i, ent := range slice {
 		if ent == o {
 			pauseIndex = i
 			break
@@ -22,7 +24,7 @@ func (e *entityCollection) remove(o gameObject) {
 
 	// Remove pause entity
 	if pauseIndex > 0 {
-		(*e)[pauseIndex] = (*e)[len(*e)-1]
-		*e = (*e)[:len(*e)-1]
+		slice[pauseIndex] = slice[len(slice)-1]
+		slice = slice[:len(slice)-1]
 	}
 }

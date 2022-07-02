@@ -1,12 +1,8 @@
 package game
 
 import (
-	"image/color"
-
 	"github.com/gotk3/gotk3/cairo"
 )
-
-var pauseColor = color.RGBA{R: 255, G: 255, B: 255, A: 255}
 
 type pause struct {
 	entity
@@ -15,8 +11,7 @@ type pause struct {
 func newPause() *pause {
 	return &pause{
 		entity{
-			rectangle: newRectangle(240, 280, 100, 40),
-			speed:     speed{},
+			rectangle: newRectangle(pauseLeft, pauseTop, pauseWidth, pauseHeight),
 			color:     pauseColor,
 		},
 	}

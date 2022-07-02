@@ -20,7 +20,7 @@ var theGame *game
 func NewBreakOut(win *gtk.ApplicationWindow, da *gtk.DrawingArea) *BreakOut {
 	b := &BreakOut{
 		win:   win,
-		speed: 20,
+		speed: gameSpeed,
 	}
 
 	// Events

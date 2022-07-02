@@ -1,8 +1,6 @@
 package game
 
 import (
-	"image/color"
-
 	"github.com/gotk3/gotk3/cairo"
 )
 
@@ -12,19 +10,13 @@ type brick struct {
 	dead   bool
 }
 
-var brickColors = []color.RGBA{
-	{R: 0, G: 50, B: 0, A: 255},
-	{R: 0, G: 100, B: 0, A: 255},
-	{R: 0, G: 150, B: 0, A: 255},
-}
-
 func newBrick(col, size int, x, y float64) *brick {
 	return &brick{
 		entity: entity{
-			rectangle: newRectangle(x, y, float64(size)*brickWidth, 15),
+			rectangle: newRectangle(x, y, float64(size)*brickWidth, brickHeight),
 			color:     brickColors[col-1],
 		},
-		points: col * 10,
+		points: col * scoreMultiplier,
 	}
 }
 
