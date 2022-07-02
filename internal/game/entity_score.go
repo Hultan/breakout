@@ -14,13 +14,13 @@ type score struct {
 	score int
 }
 
-func newScore(rec rectangle, color color.Color) *score {
+func newScore() *score {
 	return &score{
 		entity{
-			rectangle:     rec,
+			rectangle:     newRectangle(15, 593, 200, 20),
 			speed:         speed{},
 			collisionType: onCollisionNone,
-			color:         color,
+			color:         scoreColor,
 		},
 		0,
 	}

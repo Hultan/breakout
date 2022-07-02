@@ -46,6 +46,10 @@ func (b *BreakOut) mainLoop() {
 	for {
 		select {
 		case <-b.ticker.C:
+			if theGame.isPaused {
+				theGame.draw()
+				continue
+			}
 			theGame.update()
 			theGame.checkCollision()
 			theGame.draw()
@@ -92,6 +96,8 @@ func (b *BreakOut) onKeyRelease(_ *gtk.ApplicationWindow, e *gdk.Event) {
 		theGame.keyIsPressed["a"] = false
 	case gdk.KEY_d, gdk.KEY_D:
 		theGame.keyIsPressed["d"] = false
+	case gdk.KEY_p, gdk.KEY_P:
+		pauseGame()
 	case gdk.KEY_Left:
 		theGame.keyIsPressed["left"] = false
 	case gdk.KEY_Right:
@@ -100,6 +106,33 @@ func (b *BreakOut) onKeyRelease(_ *gtk.ApplicationWindow, e *gdk.Event) {
 		theGame.keyIsPressed["shift"] = false
 	}
 	theGame.keyIsPressedMutex.Unlock()
+}
+
+func pauseGame() {
+	if theGame.isPaused {
+		// Resume game
+		theGame.isPaused = false
+
+		// Find pause entity
+		pauseIndex := -1
+		for i, e := range nonGameEntities {
+			if e == theGame.pause {
+				pauseIndex = i
+				break
+			}
+		}
+
+		// Remove pause entity
+		if pauseIndex > 0 {
+			nonGameEntities[pauseIndex] = nonGameEntities[len(nonGameEntities)-1]
+			nonGameEntities = nonGameEntities[:len(nonGameEntities)-1]
+		}
+	} else {
+		// Pause game
+		theGame.isPaused = true
+		theGame.pause = newPause()
+		nonGameEntities = append(nonGameEntities, theGame.pause)
+	}
 }
 
 func (b *BreakOut) quit() {

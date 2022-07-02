@@ -26,7 +26,9 @@ type game struct {
 	player            *player
 	ball              *ball
 	score             *score
+	pause             *pause
 	width, height     float64
+	isPaused          bool
 }
 
 func newGame(da *gtk.DrawingArea, name string, w, h float64) *game {
@@ -35,7 +37,8 @@ func newGame(da *gtk.DrawingArea, name string, w, h float64) *game {
 		keyIsPressed: make(map[string]bool, 5),
 		ball:         newBall(w, h),
 		player:       newPlayer(name, w, h),
-		score:        newScore(newRectangle(15, 593, 200, 20), scoreColor),
+		score:        newScore(),
+		pause:        nil,
 		width:        w,
 		height:       h,
 	}
