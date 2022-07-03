@@ -1,6 +1,8 @@
 # Breakout
 The Breakout game in Go and GTK, inspired by Tsoding Daily.
 
+![screenshot](/assets/screenshot.png)
+
 ## TODO
 * ~~Position ball at player paddle, start at mouse click~~
 * ~~Pause functionality~~
