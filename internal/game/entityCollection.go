@@ -11,20 +11,21 @@ func (e *entityCollection) add(o gameObject) {
 }
 
 func (e *entityCollection) remove(o gameObject) {
-	slice := *e
-
-	// Find pause entity
-	pauseIndex := -1
-	for i, ent := range slice {
+	// Find index of entity o
+	index := -1
+	for i, ent := range *e {
 		if ent == o {
-			pauseIndex = i
+			index = i
 			break
 		}
 	}
 
-	// Remove pause entity
-	if pauseIndex > 0 {
-		slice[pauseIndex] = slice[len(slice)-1]
-		slice = slice[:len(slice)-1]
-	}
+	// Remove item at index
+	e.removeIndex(index)
+}
+
+func (e *entityCollection) removeIndex(index int) {
+	// Remove item at index
+	(*e)[index] = (*e)[len(*e)-1]
+	*e = (*e)[:len(*e)-1]
 }

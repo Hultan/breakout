@@ -65,6 +65,21 @@ func (g *game) update() {
 	for i := range g.entities {
 		g.entities[i].update()
 	}
+
+	// Find index of particle emitters that are now dead
+	var toRemove []int
+	for i := range g.nonGameEntities {
+		g.nonGameEntities[i].update()
+		pe, ok := g.nonGameEntities[i].(*particleEmitter)
+		if ok && pe.alive() == false {
+			toRemove = append(toRemove, i)
+		}
+	}
+
+	// Remove particle emitters that are dead
+	for i := len(toRemove) - 1; i >= 0; i-- {
+		g.nonGameEntities.removeIndex(toRemove[i])
+	}
 }
 
 func (g *game) checkCollision() {
@@ -75,7 +90,6 @@ func (g *game) checkCollision() {
 			e.collide(g.ball)
 		}
 	}
-
 }
 
 func (g *game) draw() {

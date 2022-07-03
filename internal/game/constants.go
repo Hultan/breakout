@@ -76,3 +76,10 @@ const (
 	playerSpeed                = 5
 	playerSpeedTurboMultiplier = 2.0
 )
+
+type emitterSize int
+
+const (
+	emitterSizeBounce  emitterSize = 5
+	emitterSizeExplode             = 20
+)

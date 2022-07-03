@@ -57,6 +57,7 @@ func (b *ball) collide(e gameObject) {
 		} else {
 			b.speed.dx = -b.speed.dx
 		}
+		theGame.nonGameEntities.add(newParticleEmitter(b.rectangle, o.color, emitterSizeBounce))
 	case *player:
 		// Ball bounces against the player
 
@@ -64,6 +65,7 @@ func (b *ball) collide(e gameObject) {
 		d := (o.x + o.w/2 - b.x) / o.w
 		b.speed.dx = b.speed.dx - d*playerBounce
 		b.speed.dy = -b.speed.dy
+		theGame.nonGameEntities.add(newParticleEmitter(b.rectangle, o.color, emitterSizeBounce))
 	case *cageBottom:
 		// Player missed the ball, end of ball
 
@@ -73,6 +75,7 @@ func (b *ball) collide(e gameObject) {
 	case *brick:
 		// Ball bounces against a brick
 		b.speed.dy = -b.speed.dy
+		theGame.nonGameEntities.add(newParticleEmitter(b.rectangle, o.color, emitterSizeExplode))
 	}
 }
 
