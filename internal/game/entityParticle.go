@@ -10,25 +10,32 @@ import (
 
 type particle struct {
 	entity
-	lifetime int
+	lifetime     int
+	acceleration speed
 }
 
 func newParticle(rec rectangle, col color.Color, l int) *particle {
 	// Calculate a random angle and speed
-	a := rand.Float64() * math.Pi * 2
-	dx, dy := math.Cos(a), math.Sin(a)
+	angle := rand.Float64() * math.Pi * 2
+	dx, dy := math.Cos(angle), math.Sin(angle)
 	s := speed{dx, dy}
+	a := speed{0, -.1}
 	return &particle{
 		entity: entity{
 			rectangle: rec,
 			speed:     s,
 			color:     col,
 		},
-		lifetime: l,
+		lifetime:     l,
+		acceleration: a,
 	}
 }
 
 func (p *particle) update() {
+	// Particles are affected by "gravity"
+	p.speed.dx -= p.acceleration.dx
+	p.speed.dy -= p.acceleration.dy
+
 	// To create some randomness in particle movement
 	f := rand.Float64()
 	p.position.x += p.speed.dx * f * 2
